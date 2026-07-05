@@ -1,328 +1,213 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LiteTube Neo - Next-Gen Ultra Data Saver</title>
-    <style>
-        body { 
-            background-color: #0b0f19; 
-            color: #e2e8f0; 
-            font-family: 'system-ui', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            padding-bottom: 60px;
-        }
-        header {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-        @media (min-width: 600px) {
-            header { flex-direction: row; justify-content: space-between; }
-        }
-        .brand-area h1 { 
-            color: #00f2fe; 
-            font-size: 22px; 
-            margin: 0;
-            letter-spacing: 0.5px;
-            font-weight: 800;
-        }
-        .brand-area .logo-tag {
-            font-size: 10px;
-            font-weight: bold;
-            color: #050505;
-            background: #00f2fe;
-            padding: 1px 6px;
-            border-radius: 20px;
-            margin-left: 6px;
-            vertical-align: middle;
-        }
-        .sub-text { color: #64748b; font-size: 11px; margin: 2px 0 0 0; }
-        .search-container {
-            display: flex;
-            width: 100%;
-            max-width: 380px;
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 30px;
-            padding: 4px;
-            box-sizing: border-box;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .search-container input {
-            flex: 1;
-            padding: 6px 14px;
-            border: none;
-            background: transparent;
-            color: white;
-            font-size: 13px;
-            outline: none;
-        }
-        .search-container button {
-            width: 36px;
-            height: 36px;
-            border: none;
-            background: #00f2fe;
-            color: #0f172a;
-            border-radius: 50%;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s;
-        }
-        .search-container button:hover { transform: scale(1.05); }
-        #status-message {
-            text-align: center;
-            color: #64748b;
-            font-size: 13px;
-            margin: 25px auto;
-        }
-        .video-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
-            gap: 16px; 
-            max-width: 1200px; 
-            margin: 20px auto 0 auto; 
-            padding: 0 16px; 
-        }
-        .video-card { 
-            background: #111827; 
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-radius: 10px; 
-            overflow: hidden; 
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
-            transition: border-color 0.2s;
-        }
-        .video-card:hover { border-color: rgba(0, 242, 254, 0.3); }
-        .video-title { 
-            font-size: 12px; 
-            font-weight: 500; 
-            margin: 10px; 
-            line-height: 1.4; 
-            color: #cbd5e1; 
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .lite-player { 
-            position: relative; 
-            width: 100%; 
-            aspect-ratio: 16 / 9; 
-            background-color: #030712; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .lite-player img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            opacity: 0.65; 
-        }
-        .play-btn { 
-            position: relative; 
-            width: 44px; 
-            height: 44px; 
-            background: rgba(15, 23, 42, 0.85); 
-            border: 2px solid #00f2fe;
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 2; 
-            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-            transition: background 0.2s, transform 0.2s;
-        }
-        .play-btn::before { 
-            content: ''; 
-            display: block; 
-            width: 0; 
-            height: 0; 
-            border-style: solid; 
-            border-width: 5px 0 5px 9px; 
-            border-color: transparent transparent transparent #00f2fe; 
-            margin-left: 3px; 
-        }
-        .lite-player:hover .play-btn { 
-            background: #00f2fe; 
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(0, 242, 254, 0.5);
-        }
-        .lite-player:hover .play-btn::before {
-            border-color: transparent transparent transparent #0f172a; 
-        }
-        .lite-player iframe { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            border: 0; 
-            z-index: 3; 
-        }
-        #scroll-trigger {
-            height: 60px;
-            width: 100%;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LiteTube Neo</title>
+<style>
+:root{
+  --bg:#0b0f19;
+  --text:#e2e8f0;
+  --card:#111827;
+  --neon:#00f2fe;
+  --glass:rgba(15,23,42,0.85);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  position:sticky;top:0;z-index:10;
+  background:var(--glass);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  padding:14px 16px;
+  display:flex;justify-content:center;
+}
+.search-wrap{
+  width:100%;max-width:680px;
+  display:flex;align-items:center;
+  background:var(--card);
+  border:1px solid rgba(0,242,254,0.2);
+  border-radius:999px;
+  padding:6px 6px 6px 18px;
+  transition:border-color.2s;
+}
+.search-wrap:focus-within{border-color:var(--neon)}
+.search-wrap input{
+  flex:1;background:transparent;border:0;outline:0;
+  color:var(--text);font-size:15px;
+}
+.search-wrap button{
+  width:40px;height:40px;border-radius:50%;border:0;
+  background:var(--neon);color:#000;font-size:18px;cursor:pointer;
+  display:grid;place-items:center;transition:transform.15s;
+}
+.search-wrap button:active{transform:scale(.92)}
+main{padding:20px 16px 80px}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+  max-width:1400px;margin:0 auto;
+}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.04);
+  border-radius:12px;overflow:hidden;
+  cursor:pointer;transition:border-color.2s,transform.2s;
+}
+.card:hover{border-color:var(--neon);transform:translateY(-2px)}
+.thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.title{
+  padding:10px 12px;font-size:14px;font-weight:500;
+  color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.meta{padding:0 12px 12px;font-size:12px;color:rgba(226,232,240,0.6)}
+.player{
+  position:relative;width:100%;aspect-ratio:16/9;background:#000;
+  display:grid;place-items:center;overflow:hidden;
+}
+.player iframe{width:100%;height:100%;border:0}
+.play-ring{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:88px;height:88px;border-radius:50%;
+  border:2px solid var(--neon);background:rgba(0,242,254,0.08);
+  display:grid;place-items:center;pointer-events:none;
+  transition:transform.2s,background.2s;
+}
+.card:hover.play-ring{transform:translate(-50%,-50%) scale(1.08);background:rgba(0,242,254,0.15)}
+.play-ring::after{
+  content:"";border-left:22px solid var(--neon);
+  border-top:14px solid transparent;border-bottom:14px solid transparent;
+  margin-left:4px;
+}
+.sentinel{height:1px}
+.loader{color:rgba(226,232,240,0.5);text-align:center;padding:20px;font-size:14px}
+@media(max-width:520px){.grid{gap:12px}header{padding:12px}}
+</style>
 </head>
 <body>
+<header>
+  <div class="search-wrap">
+    <input id="q" type="text" placeholder="Search LiteTube Neo" autocomplete="off">
+    <button id="go" aria-label="Search">🔍</button>
+  </div>
+</header>
 
-    <header>
-        <div class="brand-area">
-            <h1>LiteTube<span class="logo-tag">NEO</span></h1>
-            <p class="sub-text">⚡ Zero-Tracking • Pure Savings • Scroll to Load</p>
-        </div>
-        <div class="search-container">
-            <input type="text" id="search-input" value="Trending Videos" placeholder="Kuch bhi search karein...">
-            <button id="search-btn">🔍</button>
-        </div>
-    </header>
+<main>
+  <div id="grid" class="grid"></div>
+  <div id="sentinel" class="sentinel"></div>
+  <div id="loader" class="loader">Scroll for more</div>
+</main>
 
-    <div class="video-grid" id="video-display-grid"></div>
-    
-    <div id="status-message">Loading light network stream...</div>
-    
-    <div id="scroll-trigger"></div>
+<script>
+const API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4';
+const BATCH = 8;
+const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
 
-    <script>
-        const API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4'; 
+let nextPageToken = '';
+let currentQuery = 'trending';
+let loading = false;
+let endReached = false;
 
-        const videoGrid = document.getElementById('video-display-grid');
-        const statusMessage = document.getElementById('status-message');
-        const searchInput = document.getElementById('search-input');
-        const searchBtn = document.getElementById('search-btn');
-        const scrollTrigger = document.getElementById('scroll-trigger');
+const grid = document.getElementById('grid');
+const sentinel = document.getElementById('sentinel');
+const loader = document.getElementById('loader');
+const qInput = document.getElementById('q');
+const goBtn = document.getElementById('go');
 
-        let nextDataPageToken = ''; 
-        let currentSearchQuery = '';
-        let isFetchingData = false;
+const imgObserver = new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const img = entry.target;
+      const src = img.dataset.src;
+      if(src){img.src = src; img.removeAttribute('data-src')}
+      imgObserver.unobserve(img);
+    }
+  });
+},{rootMargin:'200px'});
 
-        async function fetchVideos(query, isLoadMore = false) {
-            if (isFetchingData) return;
-            isFetchingData = true;
-            
-            statusMessage.style.display = 'block';
-            statusMessage.innerText = "Connecting to lite nodes...";
+const scrollObserver = new IntersectionObserver((entries)=>{
+  if(entries[0].isIntersecting){loadBatch()}
+},{rootMargin:'300px'});
 
-            if (!isLoadMore) {
-                videoGrid.innerHTML = '';
-                nextDataPageToken = '';
-                currentSearchQuery = query;
-            }
+scrollObserver.observe(sentinel);
 
-            try {
-                let apiURL = `https://googleapis.com{encodeURIComponent(query)}&type=video&key=${API_KEY}`;
-                if (isLoadMore && nextDataPageToken) {
-                    apiURL += `&pageToken=${nextDataPageToken}`;
-                }
-
-                const response = await fetch(apiURL);
-                const data = await response.json();
-
-                if (!data.items || data.items.length === 0) {
-                    statusMessage.innerText = isLoadMore ? "End of streams." : "No nodes found.";
-                    isFetchingData = false;
-                    return;
-                }
-
-                nextDataPageToken = data.nextPageToken || '';
-                statusMessage.style.display = 'none';
-
-                data.items.forEach(item => {
-                    const videoId = item.id.videoId;
-                    if (!videoId) return; 
-
-                    const title = item.snippet.title;
-                    const thumbnail = item.snippet.thumbnails.default ? item.snippet.thumbnails.default.url : 'https://placeholder.com';
-
-                    const cardHTML = `
-                        <div class="video-card">
-                            <div class="lite-player" data-id="${videoId}">
-                                <img data-src="${thumbnail}" alt="Thumbnail" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=">
-                                <div class="play-btn"></div>
-                            </div>
-                            <div class="video-title">${title}</div>
-                        </div>
-                    `;
-                    videoGrid.innerHTML += cardHTML;
-                });
-
-                activateLazyLoadingImages();
-                activateDataSaverPlayers();
-                isFetchingData = false;
-
-            } catch (error) {
-                console.error(error);
-                statusMessage.innerText = "Network overhead. Retry connection.";
-                isFetchingData = false;
-            }
-        }
-
-        function activateLazyLoadingImages() {
-            const imageObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        const img = entry.target;
-                        if(img.getAttribute('data-src')) {
-                            img.src = img.getAttribute('data-src'); 
-                            img.removeAttribute('data-src');
-                            }
-observer.unobserve(img);
-}
-});
-}, { rootMargin: "0px 0px 100px 0px" });
-
-document.querySelectorAll('.lite-player img[data-src]').forEach(img => imageObserver.observe(img));
+function buildCard(item){
+  const videoId = item.id.videoId;
+  const snip = item.snippet;
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="thumb-wrap">
+      <img src="${BLANK}" data-src="${snip.thumbnails.default.url}" alt="${snip.title}">
+      <div class="play-ring"></div>
+    </div>
+    <div class="title" title="${snip.title}">${snip.title}</div>
+    <div class="meta">${snip.channelTitle}</div>
+  `;
+  const img = card.querySelector('img');
+  imgObserver.observe(img);
+  card.addEventListener('click',()=>activatePlayer(card,videoId));
+  return card;
 }
 
-const swipeObserver = new IntersectionObserver((entries) => {
-if (entries.isIntersecting && nextDataPageToken && !isFetchingData) {
-fetchVideos(currentSearchQuery, true);
-}
-}, { threshold: 0.1 });
-
-swipeObserver.observe(scrollTrigger);
-
-function activateDataSaverPlayers() {
-document.querySelectorAll('.lite-player').forEach(player => {
-player.addEventListener('click', function() {
-if (this.querySelector('iframe')) return;
-
-const videoId = this.getAttribute('data-id');
-const iframe = document.createElement('iframe');
-
-iframe.setAttribute('src', https://youtube-nocookie.com{videoId}?autoplay=1&modestbranding=1&rel=0&loop=1&playlist=${videoId}&vq=tiny);
-iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
-iframe.setAttribute('allowfullscreen', 'true');
-
-this.appendChild(iframe);
-});
-});
+function activatePlayer(card,videoId){
+  const wrap = card.querySelector('.thumb-wrap');
+  const src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&vq=tiny&loop=1&playlist=${videoId}&rel=0&modestbranding=1&controls=1`;
+  wrap.className = 'player';
+  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 }
 
-searchBtn.addEventListener('click', () => fetchVideos(searchInput.value));
-searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') fetchVideos(searchInput.value); });
+async function fetchBatch(){
+  if(loading || endReached) return;
+  loading = true;
+  loader.textContent = 'Loading...';
+  const url = new URL('https://www.googleapis.com/youtube/v3/search');
+  url.searchParams.set('part','snippet');
+  url.searchParams.set('maxResults',BATCH);
+  url.searchParams.set('type','video');
+  url.searchParams.set('q',currentQuery);
+  url.searchParams.set('key',API_KEY);
+  if(nextPageToken) url.searchParams.set('pageToken',nextPageToken);
 
-window.onload = () => {
-fetchVideos(searchInput.value);
-};
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
+    nextPageToken = data.nextPageToken || '';
+    if(!nextPageToken) endReached = true;
+    (data.items||[]).forEach(item=>{
+      grid.appendChild(buildCard(item));
+    });
+    loader.textContent = endReached? 'No more results' : 'Scroll for more';
+  }catch(e){
+    loader.textContent = 'Error loading data';
+  }
+  loading = false;
+}
 
+function loadBatch(){fetchBatch()}
 
+function newSearch(){
+  const val = qInput.value.trim();
+  if(!val) return;
+  currentQuery = val;
+  grid.innerHTML = '';
+  nextPageToken = '';
+  endReached = false;
+  loadBatch();
+}
+
+goBtn.addEventListener('click',newSearch);
+qInput.addEventListener('keydown',e=>{if(e.key==='Enter')newSearch()});
+
+loadBatch();
+</script>
+</body>
+</html>         
