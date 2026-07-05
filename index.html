@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -35,7 +35,7 @@ header{
   border:1px solid rgba(0,242,254,0.2);
   border-radius:999px;
   padding:6px 6px 6px 18px;
-  transition:border-color.2s;
+  transition:border-color 0.2s;
 }
 .search-wrap:focus-within{border-color:var(--neon)}
 .search-wrap input{
@@ -45,7 +45,7 @@ header{
 .search-wrap button{
   width:40px;height:40px;border-radius:50%;border:0;
   background:var(--neon);color:#000;font-size:18px;cursor:pointer;
-  display:grid;place-items:center;transition:transform.15s;
+  display:grid;place-items:center;transition:transform 0.15s;
 }
 .search-wrap button:active{transform:scale(.92)}
 main{padding:20px 16px 80px}
@@ -59,7 +59,7 @@ main{padding:20px 16px 80px}
   background:var(--card);
   border:1px solid rgba(255,255,255,0.04);
   border-radius:12px;overflow:hidden;
-  cursor:pointer;transition:border-color.2s,transform.2s;
+  cursor:pointer;transition:border-color 0.2s,transform 0.2s;
 }
 .card:hover{border-color:var(--neon);transform:translateY(-2px)}
 .thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000}
@@ -79,9 +79,12 @@ main{padding:20px 16px 80px}
   width:88px;height:88px;border-radius:50%;
   border:2px solid var(--neon);background:rgba(0,242,254,0.08);
   display:grid;place-items:center;pointer-events:none;
-  transition:transform.2s,background.2s;
+  transition:transform 0.2s,background 0.2s;
 }
-.card:hover.play-ring{transform:translate(-50%,-50%) scale(1.08);background:rgba(0,242,254,0.15)}
+.card:hover .play-ring{
+  transform:translate(-50%,-50%) scale(1.08);
+  background:rgba(0,242,254,0.15);
+}
 .play-ring::after{
   content:"";border-left:22px solid var(--neon);
   border-top:14px solid transparent;border-bottom:14px solid transparent;
@@ -95,7 +98,7 @@ main{padding:20px 16px 80px}
 <body>
 <header>
   <div class="search-wrap">
-    <input id="q" type="text" placeholder="Search LiteTube Neo" autocomplete="off">
+    <input id="q" type="text" placeholder="Search LiteTube Neo" autocomplete="off" aria-label="Search videos">
     <button id="go" aria-label="Search">🔍</button>
   </div>
 </header>
@@ -169,17 +172,28 @@ async function fetchBatch(){
   if(loading || endReached) return;
   loading = true;
   loader.textContent = 'Loading...';
-  const url = new URL('https://www.googleapis.com/youtube/v3/search');
-  url.searchParams.set('part','snippet');
-  url.searchParams.set('maxResults',BATCH);
-  url.searchParams.set('type','video');
-  url.searchParams.set('q',currentQuery);
-  url.searchParams.set('key',API_KEY);
-  if(nextPageToken) url.searchParams.set('pageToken',nextPageToken);
-
+  
   try{
+    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+    url.searchParams.set('part','snippet');
+    url.searchParams.set('maxResults',BATCH);
+    url.searchParams.set('type','video');
+    url.searchParams.set('q',currentQuery);
+    url.searchParams.set('key',API_KEY);
+    if(nextPageToken) url.searchParams.set('pageToken',nextPageToken);
+
     const res = await fetch(url);
+    
+    if(!res.ok) throw new Error('API error');
+    
     const data = await res.json();
+    
+    if(data.error){
+      loader.textContent = 'API Quota exceeded. Try later.';
+      console.error('YouTube API Error:', data.error);
+      return;
+    }
+    
     nextPageToken = data.nextPageToken || '';
     if(!nextPageToken) endReached = true;
     (data.items||[]).forEach(item=>{
@@ -187,7 +201,8 @@ async function fetchBatch(){
     });
     loader.textContent = endReached? 'No more results' : 'Scroll for more';
   }catch(e){
-    loader.textContent = 'Error loading data';
+    console.error('Error:', e);
+    loader.textContent = 'Error loading data. Try again.';
   }
   loading = false;
 }
@@ -210,4 +225,4 @@ qInput.addEventListener('keydown',e=>{if(e.key==='Enter')newSearch()});
 loadBatch();
 </script>
 </body>
-</html>         
+</html>
