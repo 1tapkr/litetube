@@ -4,42 +4,205 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LiteTube Pro</title>
+
 <style>
 :root{
   --bg:#050A18; --card:#0F172A; --neon:#00F2FE; --neon2:#4F46E5; --text:#E2E8F0;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,sans-serif;overflow-y:scroll}
-header{position:sticky;top:0;z-index:20;background:rgba(5,10,24,0.8);backdrop-filter:blur(16px);padding:16px;display:flex;justify-content:center;border-bottom:1px solid rgba(0,242,254,0.1)}
-.search-wrap{width:100%;max-width:700px;display:flex;background:var(--card);border:1px solid rgba(0,242,254,0.2);border-radius:999px;padding:8px;transition:0.3s}
-.search-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.2)}
-.search-wrap input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-size:16px;padding:0 16px}
-.search-wrap button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-size:20px;cursor:pointer;transition:0.2s}
-.search-wrap button:hover{transform:scale(1.1)}
-main{padding:24px 16px 80px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;max-width:1600px;margin:0 auto}
-.card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;cursor:pointer;transition:0.3s}
-.card:hover{transform:translateY(-5px);border-color:var(--neon);box-shadow:0 10px 30px rgba(0,242,254,0.1)}
-.thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.thumb img{width:100%;height:100%;object-fit:cover}
-.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(0,242,254,0.9);border-radius:50%;display:grid;place-items:center;opacity:0;transition:0.3s}
-.card:hover .play-btn{opacity:1}
-.play-btn::after{content:"";border-left:18px solid #000;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:3px}
-.info{padding:14px}
-.title{font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.channel{font-size:13px;color:rgba(226,232,240,0.6);margin-top:6px}
 
-/* MODAL */
-.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:100;display:none;place-items:center;padding:20px}
-.modal.active{display:grid}
-.modal-content{position:relative;width:100%;max-width:1200px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;border:2px solid var(--neon);box-shadow:0 0 40px rgba(0,242,254,0.3)}
-.modal-content iframe{width:100%;height:100%;border:0}
-.close{position:absolute;top:-50px;right:0;width:40px;height:40px;background:var(--neon);border:0;border-radius:50%;font-size:24px;cursor:pointer;color:#000;font-weight:bold}
-.loader{text-align:center;padding:30px;color:rgba(226,232,240,0.5)}
-@media(max-width:600px){.grid{gap:14px}.modal-content{border-radius:0}}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Segoe UI',Roboto,sans-serif;
+  overflow-y:scroll
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(5,10,24,0.8);
+  backdrop-filter:blur(16px);
+  padding:16px;
+  display:flex;
+  justify-content:center;
+  border-bottom:1px solid rgba(0,242,254,0.1)
+}
+
+.search-wrap{
+  width:100%;
+  max-width:700px;
+  display:flex;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:999px;
+  padding:8px;
+  backdrop-filter:blur(20px);
+}
+
+.search-wrap input{
+  flex:1;
+  background:transparent;
+  border:0;
+  outline:0;
+  color:var(--text);
+  font-size:16px;
+  padding:0 16px
+}
+
+.search-wrap button{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  border:0;
+  background:linear-gradient(135deg,var(--neon),var(--neon2));
+  color:#000;
+  font-size:20px;
+  cursor:pointer;
+  transition:0.2s
+}
+
+.search-wrap button:hover{transform:scale(1.1)}
+
+main{padding:24px 16px 80px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:20px;
+  max-width:1600px;
+  margin:0 auto
+}
+
+/* 🔥 UPDATED CARD */
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:18px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 50px rgba(0,0,0,0.5);
+  border-color:var(--neon);
+}
+
+/* 🔥 THUMB BLUR FIX */
+.thumb img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  transition:0.4s;
+  filter:blur(1.2px) brightness(0.85);
+}
+
+.card:hover .thumb img{
+  filter:blur(0px) brightness(1);
+  transform:scale(1.05);
+}
+
+.thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+
+.play-btn{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:60px;
+  height:60px;
+  background:rgba(0,242,254,0.85);
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  opacity:0;
+  transition:0.3s
+}
+
+.card:hover .play-btn{opacity:1}
+
+.play-btn::after{
+  content:"";
+  border-left:18px solid #000;
+  border-top:12px solid transparent;
+  border-bottom:12px solid transparent;
+  margin-left:3px
+}
+
+.info{padding:14px}
+
+.title{
+  font-size:15px;
+  font-weight:600;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden
+}
+
+.channel{
+  font-size:13px;
+  color:rgba(226,232,240,0.6);
+  margin-top:6px
+}
+
+/* 🔥 FULLSCREEN PLAYER FIX */
+.modal{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  z-index:100;
+  display:none;
+}
+
+.modal.active{display:block}
+
+.modal-content{
+  width:100%;
+  height:100%;
+  position:relative;
+}
+
+.modal-content iframe{
+  width:100%;
+  height:100%;
+  border:0;
+}
+
+.close{
+  position:absolute;
+  top:15px;
+  left:15px;
+  z-index:999;
+  padding:10px 18px;
+  border-radius:30px;
+  border:none;
+  background:rgba(0,0,0,0.6);
+  color:#fff;
+  cursor:pointer;
+  backdrop-filter:blur(10px);
+}
+
+.loader{
+  text-align:center;
+  padding:30px;
+  color:rgba(226,232,240,0.5)
+}
+
+@media(max-width:600px){
+  .grid{gap:14px}
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <div class="search-wrap">
     <input id="q" type="text" placeholder="Search LiteTube Pro...">
@@ -52,10 +215,11 @@ main{padding:24px 16px 80px}
   <div id="loader" class="loader">Loading more...</div>
 </main>
 
+<!-- FULLSCREEN PLAYER -->
 <div id="modal" class="modal">
   <div class="modal-content">
-    <button class="close" id="close">×</button>
-    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+    <button class="close" id="close">⬅ Back</button>
+    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </div>
 </div>
 
@@ -74,7 +238,7 @@ function buildCard(item){
   card.className = 'card';
   card.innerHTML = `
     <div class="thumb">
-      <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}" loading="lazy">
+      <img src="${item.snippet.thumbnails.high.url}" loading="lazy">
       <div class="play-btn"></div>
     </div>
     <div class="info">
@@ -86,49 +250,62 @@ function buildCard(item){
   return card;
 }
 
-// FIX 1: नया video चालू करो तो पुराना बंद
+/* 🔥 FIX: AUDIO + FULLSCREEN SAFE PLAYER */
 function openModal(videoId){
-  closeModal(); // पहले वाले को force बंद करो
+
+  closeModal();
+
   const origin = window.location.origin;
-  const src = https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&controls=1&origin=${origin};
-  player.src = src;
+
+  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&controls=1&origin=${origin}`;
+
   modal.classList.add('active');
 }
 
+/* 🔥 FIX: STOP AUDIO COMPLETELY */
 function closeModal(){
   modal.classList.remove('active');
-  player.src = ''; // video stop - यही main fix है
+  player.src = '';
 }
+
 closeBtn.onclick = closeModal;
-modal.onclick = (e) => { if(e.target === modal) closeModal() }
-document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal() })
+modal.onclick = (e)=>{ if(e.target === modal) closeModal() };
+document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal() });
 
 async function loadVideos(){
-  if(loading || !nextPageToken && grid.children.length > 0) return; 
-  loading = true; loader.style.display = 'block';
-  const url = https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${currentQuery}&key=${API_KEY}&pageToken=${nextPageToken};
+  if(loading || !nextPageToken && grid.children.length>0) return;
+
+  loading = true;
+  loader.style.display = 'block';
+
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${currentQuery}&key=${API_KEY}&pageToken=${nextPageToken}`;
+
   const res = await fetch(url);
   const data = await res.json();
+
   nextPageToken = data.nextPageToken || '';
-  data.items.forEach(item => grid.appendChild(buildCard(item)));
-  loader.style.display = nextPageToken ? 'block' : 'none';
+
+  data.items.forEach(item=>grid.appendChild(buildCard(item)));
+
+  loader.style.display = nextPageToken ? 'block':'none';
   loading = false;
 }
 
-// FIX 2: PC + Mobile दोनों में Infinite Scroll
-window.addEventListener('scroll', () => {
-  if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 500) {
+window.addEventListener('scroll',()=>{
+  if((window.innerHeight + window.scrollY) >= document.body.offsetHeight-500){
     loadVideos();
   }
 });
 
-document.getElementById('go').onclick = () => {
+document.getElementById('go').onclick = ()=>{
   currentQuery = document.getElementById('q').value || 'trending';
-  grid.innerHTML = ''; nextPageToken = ''; loadVideos();
-}
+  grid.innerHTML = '';
+  nextPageToken = '';
+  loadVideos();
+};
 
-// First load
 loadVideos();
 </script>
+
 </body>
 </html>
