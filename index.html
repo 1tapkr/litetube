@@ -3,241 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LiteTube Neo</title>
+<title>LiteTube Pro</title>
 <style>
 :root{
-  --bg:#0b0f19;
-  --text:#e2e8f0;
-  --card:#111827;
-  --neon:#00f2fe;
-  --glass:rgba(15,23,42,0.85);
+  --bg:#050A18;
+  --card:#0F172A;
+  --neon:#00F2FE;
+  --neon2:#4F46E5;
+  --text:#E2E8F0;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",sans-serif;
-  line-height:1.5;
-  -webkit-font-smoothing:antialiased;
-}
-header{
-  position:sticky;top:0;z-index:10;
-  background:var(--glass);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid rgba(255,255,255,0.06);
-  padding:14px 16px;
-  display:flex;justify-content:center;
-}
-.search-wrap{
-  width:100%;max-width:680px;
-  display:flex;align-items:center;
-  background:var(--card);
-  border:1px solid rgba(0,242,254,0.2);
-  border-radius:999px;
-  padding:6px 6px 6px 18px;
-  transition:border-color 0.2s;
-}
-.search-wrap:focus-within{border-color:var(--neon)}
-.search-wrap input{
-  flex:1;background:transparent;border:0;outline:0;
-  color:var(--text);font-size:15px;
-}
-.search-wrap button{
-  width:40px;height:40px;border-radius:50%;border:0;
-  background:var(--neon);color:#000;font-size:18px;cursor:pointer;
-  display:grid;place-items:center;transition:transform 0.15s;
-}
-.search-wrap button:active{transform:scale(.92)}
-main{padding:20px 16px 80px}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:16px;
-  max-width:1400px;margin:0 auto;
-}
-.card{
-  background:var(--card);
-  border:1px solid rgba(255,255,255,0.04);
-  border-radius:12px;overflow:hidden;
-  cursor:pointer;transition:border-color 0.2s,transform 0.2s;
-}
-.card:hover{border-color:var(--neon);transform:translateY(-2px)}
-.thumb-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000}
-.thumb-wrap img{width:100%;height:100%;object-fit:cover;display:block}
-.title{
-  padding:10px 12px;font-size:14px;font-weight:500;
-  color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.meta{padding:0 12px 12px;font-size:12px;color:rgba(226,232,240,0.6)}
-.player{
-  position:relative;width:100%;aspect-ratio:16/9;background:#000;
-  display:grid;place-items:center;overflow:hidden;
-}
-.player iframe{width:100%;height:100%;border:0}
-.play-ring{
-  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-  width:88px;height:88px;border-radius:50%;
-  border:2px solid var(--neon);background:rgba(0,242,254,0.08);
-  display:grid;place-items:center;pointer-events:none;
-  transition:transform 0.2s,background 0.2s;
-}
-.card:hover.play-ring{
-  transform:translate(-50%,-50%) scale(1.08);
-  background:rgba(0,242,254,0.15);
-}
-.play-ring::after{
-  content:"";border-left:22px solid var(--neon);
-  border-top:14px solid transparent;border-bottom:14px solid transparent;
-  margin-left:4px;
-}
-.sentinel{height:1px}
-.loader{color:rgba(226,232,240,0.5);text-align:center;padding:20px;font-size:14px}
-@media(max-width:520px){.grid{gap:12px}header{padding:12px}}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(5,10,24,0.8);backdrop-filter:blur(16px);padding:16px;display:flex;justify-content:center;border-bottom:1px solid rgba(0,242,254,0.1)}
+.search-wrap{width:100%;max-width:700px;display:flex;background:var(--card);border:1px solid rgba(0,242,254,0.2);border-radius:999px;padding:8px;transition:0.3s}
+.search-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.2)}
+.search-wrap input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-size:16px;padding:0 16px}
+.search-wrap button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-size:20px;cursor:pointer;transition:0.2s}
+.search-wrap button:hover{transform:scale(1.1)}
+main{padding:24px 16px 80px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;max-width:1600px;margin:0 auto}
+.card{background:var(--card);border:1px solid rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;cursor:pointer;transition:0.3s}
+.card:hover{transform:translateY(-5px);border-color:var(--neon);box-shadow:0 10px 30px rgba(0,242,254,0.1)}
+.thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.thumb img{width:100%;height:100%;object-fit:cover}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:60px;height:60px;background:rgba(0,242,254,0.9);border-radius:50%;display:grid;place-items:center;opacity:0;transition:0.3s}
+.card:hover .play-btn{opacity:1}
+.play-btn::after{content:"";border-left:18px solid #000;border-top:12px solid transparent;border-bottom:12px solid transparent;margin-left:3px}
+.info{padding:14px}
+.title{font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.channel{font-size:13px;color:rgba(226,232,240,0.6);margin-top:6px}
+
+/* MODAL PLAYER - यही main fix है */
+.modal{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:100;display:none;place-items:center;padding:20px}
+.modal.active{display:grid}
+.modal-content{position:relative;width:100%;max-width:1200px;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;border:2px solid var(--neon);box-shadow:0 0 40px rgba(0,242,254,0.3)}
+.modal-content iframe{width:100%;height:100%;border:0}
+.close{position:absolute;top:-50px;right:0;width:40px;height:40px;background:var(--neon);border:0;border-radius:50%;font-size:24px;cursor:pointer;color:#000;font-weight:bold}
+.loader{text-align:center;padding:30px;color:rgba(226,232,240,0.5)}
+@media(max-width:600px){.grid{gap:14px}.modal-content{border-radius:0}}
 </style>
 </head>
 <body>
 <header>
   <div class="search-wrap">
-    <input id="q" type="text" placeholder="Search LiteTube Neo" autocomplete="off" aria-label="Search videos">
-    <button id="go" aria-label="Search">🔍</button>
+    <input id="q" type="text" placeholder="Search LiteTube Pro...">
+    <button id="go">🔍</button>
   </div>
 </header>
 
 <main>
   <div id="grid" class="grid"></div>
-  <div id="sentinel" class="sentinel"></div>
-  <div id="loader" class="loader">Scroll for more</div>
+  <div id="loader" class="loader">Loading...</div>
 </main>
+
+<!-- MODAL PLAYER -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <button class="close" id="close">×</button>
+    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
+  </div>
+</div>
 
 <script>
 const API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4';
-const BATCH = 8;
-const BLANK = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==';
-
-let nextPageToken = '';
-let currentQuery = 'trending';
-let loading = false;
-let endReached = false;
+let nextPageToken = '', currentQuery = 'trending', loading = false;
 
 const grid = document.getElementById('grid');
-const sentinel = document.getElementById('sentinel');
 const loader = document.getElementById('loader');
-const qInput = document.getElementById('q');
-const goBtn = document.getElementById('go');
-
-const imgObserver = new IntersectionObserver((entries)=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      const img = entry.target;
-      const src = img.dataset.src;
-      if(src){img.src = src; img.removeAttribute('data-src')}
-      imgObserver.unobserve(img);
-    }
-  });
-},{rootMargin:'200px'});
-
-const scrollObserver = new IntersectionObserver((entries)=>{
-  if(entries[0].isIntersecting){loadBatch()}
-},{rootMargin:'300px'});
-
-scrollObserver.observe(sentinel);
+const modal = document.getElementById('modal');
+const player = document.getElementById('player');
+const closeBtn = document.getElementById('close');
 
 function buildCard(item){
-  const videoId = item.id.videoId;
-  const snip = item.snippet;
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `
-    <div class="thumb-wrap">
-      <img src="${BLANK}" data-src="${snip.thumbnails.medium.url}" alt="${snip.title}">
-      <div class="play-ring"></div>
+    <div class="thumb">
+      <img src="${item.snippet.thumbnails.high.url}" alt="${item.snippet.title}">
+      <div class="play-btn"></div>
     </div>
-    <div class="title" title="${snip.title}">${snip.title}</div>
-    <div class="meta">${snip.channelTitle}</div>
+    <div class="info">
+      <div class="title">${item.snippet.title}</div>
+      <div class="channel">${item.snippet.channelTitle}</div>
+    </div>
   `;
-  const img = card.querySelector('img');
-  imgObserver.observe(img);
-  card.addEventListener('click',()=>activatePlayer(card,videoId));
+  card.onclick = () => openModal(item.id.videoId);
   return card;
 }
 
-// ENHANCED YOUTUBE EMBED WITH ORIGIN + REFERRER
-function activatePlayer(card,videoId){
-  const wrap = card.querySelector('.thumb-wrap');
-  const currentOrigin = window.location.origin;
-
-  const params = new URLSearchParams({
-    autoplay: 1,
-    vq: 'hd720',
-    loop: 1,
-    playlist: videoId,
-    rel: 0,
-    modestbranding: 1,
-    controls: 1,
-    playsinline: 1,
-    origin: currentOrigin,
-    enablejsapi: 1
-  });
-
-  const src = `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
-
-  wrap.className = 'player';
-  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="YouTube video player"></iframe>`;
+// MODAL OPEN - YT branding हट गया + fullscreen
+function openModal(videoId){
+  const origin = window.location.origin;
+  const src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&controls=1&origin=${origin}`;
+  player.src = src;
+  modal.classList.add('active');
 }
 
-async function fetchBatch(){
-  if(loading || endReached) return;
-  loading = true;
-  loader.textContent = 'Loading...';
+// MODAL CLOSE
+function closeModal(){
+  modal.classList.remove('active');
+  player.src = ''; // video stop
+}
+closeBtn.onclick = closeModal;
+modal.onclick = (e) => { if(e.target === modal) closeModal() }
 
-  try{
-    const url = new URL('https://www.googleapis.com/youtube/v3/search');
-    url.searchParams.set('part','snippet');
-    url.searchParams.set('maxResults',BATCH);
-    url.searchParams.set('type','video');
-    url.searchParams.set('q',currentQuery);
-    url.searchParams.set('key',API_KEY);
-    if(nextPageToken) url.searchParams.set('pageToken',nextPageToken);
-
-    const res = await fetch(url);
-    if(!res.ok) throw new Error('API error');
-
-    const data = await res.json();
-    if(data.error){
-      loader.textContent = 'API Quota exceeded. Try later.';
-      console.error('YouTube API Error:', data.error);
-      return;
-    }
-
-    nextPageToken = data.nextPageToken || '';
-    if(!nextPageToken) endReached = true;
-    (data.items||[]).forEach(item=>{
-      grid.appendChild(buildCard(item));
-    });
-    loader.textContent = endReached? 'No more results' : 'Scroll for more';
-  }catch(e){
-    console.error('Error:', e);
-    loader.textContent = 'Error loading data. Try again.';
-  }
+async function loadVideos(){
+  if(loading) return; loading = true;
+  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${currentQuery}&key=${API_KEY}&pageToken=${nextPageToken}`;
+  const res = await fetch(url);
+  const data = await res.json();
+  nextPageToken = data.nextPageToken || '';
+  data.items.forEach(item => grid.appendChild(buildCard(item)));
+  loader.style.display = nextPageToken ? 'block' : 'none';
   loading = false;
 }
 
-function loadBatch(){fetchBatch()}
-
-function newSearch(){
-  const val = qInput.value.trim();
-  if(!val) return;
-  currentQuery = val;
-  grid.innerHTML = '';
-  nextPageToken = '';
-  endReached = false;
-  loadBatch();
+document.getElementById('go').onclick = () => {
+  currentQuery = document.getElementById('q').value || 'trending';
+  grid.innerHTML = ''; nextPageToken = ''; loadVideos();
 }
 
-goBtn.addEventListener('click',newSearch);
-qInput.addEventListener('keydown',e=>{if(e.key==='Enter')newSearch()});
-
-loadBatch();
+loadVideos();
 </script>
 </body>
 </html>
