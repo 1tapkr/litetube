@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -163,9 +164,12 @@ function buildCard(item){
 
 function activatePlayer(card,videoId){
   const wrap = card.querySelector('.thumb-wrap');
-  const src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&vq=tiny&loop=1&playlist=${videoId}&rel=0&modestbranding=1&controls=1`;
+  const currentOrigin = window.location.origin; 
+  
+  const src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&vq=tiny&loop=1&playlist=${videoId}&rel=0&modestbranding=1&controls=1&origin=${currentOrigin}`;
+  
   wrap.className = 'player';
-  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
 }
 
 async function fetchBatch(){
@@ -226,3 +230,4 @@ loadBatch();
 </script>
 </body>
 </html>
+```
