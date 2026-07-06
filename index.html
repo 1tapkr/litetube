@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,7 +81,7 @@ main{padding:20px 16px 80px}
   display:grid;place-items:center;pointer-events:none;
   transition:transform 0.2s,background 0.2s;
 }
-.card:hover .play-ring{
+.card:hover.play-ring{
   transform:translate(-50%,-50%) scale(1.08);
   background:rgba(0,242,254,0.15);
 }
@@ -150,7 +149,7 @@ function buildCard(item){
   card.className = 'card';
   card.innerHTML = `
     <div class="thumb-wrap">
-      <img src="${BLANK}" data-src="${snip.thumbnails.default.url}" alt="${snip.title}">
+      <img src="${BLANK}" data-src="${snip.thumbnails.medium.url}" alt="${snip.title}">
       <div class="play-ring"></div>
     </div>
     <div class="title" title="${snip.title}">${snip.title}</div>
@@ -162,21 +161,35 @@ function buildCard(item){
   return card;
 }
 
+// ENHANCED YOUTUBE EMBED WITH ORIGIN + REFERRER
 function activatePlayer(card,videoId){
   const wrap = card.querySelector('.thumb-wrap');
-  const currentOrigin = window.location.origin; 
-  
-  const src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&vq=tiny&loop=1&playlist=${videoId}&rel=0&modestbranding=1&controls=1&origin=${currentOrigin}`;
-  
+  const currentOrigin = window.location.origin;
+
+  const params = new URLSearchParams({
+    autoplay: 1,
+    vq: 'hd720',
+    loop: 1,
+    playlist: videoId,
+    rel: 0,
+    modestbranding: 1,
+    controls: 1,
+    playsinline: 1,
+    origin: currentOrigin,
+    enablejsapi: 1
+  });
+
+  const src = `https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
+
   wrap.className = 'player';
-  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  wrap.innerHTML = `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin" title="YouTube video player"></iframe>`;
 }
 
 async function fetchBatch(){
   if(loading || endReached) return;
   loading = true;
   loader.textContent = 'Loading...';
-  
+
   try{
     const url = new URL('https://www.googleapis.com/youtube/v3/search');
     url.searchParams.set('part','snippet');
@@ -187,17 +200,15 @@ async function fetchBatch(){
     if(nextPageToken) url.searchParams.set('pageToken',nextPageToken);
 
     const res = await fetch(url);
-    
     if(!res.ok) throw new Error('API error');
-    
+
     const data = await res.json();
-    
     if(data.error){
       loader.textContent = 'API Quota exceeded. Try later.';
       console.error('YouTube API Error:', data.error);
       return;
     }
-    
+
     nextPageToken = data.nextPageToken || '';
     if(!nextPageToken) endReached = true;
     (data.items||[]).forEach(item=>{
@@ -230,4 +241,3 @@ loadBatch();
 </script>
 </body>
 </html>
-```
