@@ -40,7 +40,10 @@ header{
   border-radius:999px;
   padding:8px;
   backdrop-filter:blur(20px);
+  transition:0.3s;
 }
+
+.search-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 20px rgba(0,242,254,0.2)}
 
 .search-wrap input{
   flex:1;
@@ -76,7 +79,6 @@ main{padding:24px 16px 80px}
   margin:0 auto
 }
 
-/* 🔥 UPDATED CARD */
 .card{
   background:var(--card);
   border:1px solid rgba(255,255,255,0.05);
@@ -92,7 +94,6 @@ main{padding:24px 16px 80px}
   border-color:var(--neon);
 }
 
-/* 🔥 THUMB BLUR FIX */
 .thumb img{
   width:100%;
   height:100%;
@@ -150,7 +151,6 @@ main{padding:24px 16px 80px}
   margin-top:6px
 }
 
-/* 🔥 FULLSCREEN PLAYER FIX */
 .modal{
   position:fixed;
   inset:0;
@@ -187,12 +187,19 @@ main{padding:24px 16px 80px}
   color:#fff;
   cursor:pointer;
   backdrop-filter:blur(10px);
+  font-weight:600;
 }
 
 .loader{
   text-align:center;
   padding:30px;
   color:rgba(226,232,240,0.5)
+}
+
+.error{
+  text-align:center;
+  padding:30px;
+  color:#ff6b6b
 }
 
 @media(max-width:600px){
@@ -213,32 +220,39 @@ main{padding:24px 16px 80px}
 <main>
   <div id="grid" class="grid"></div>
   <div id="loader" class="loader">Loading more...</div>
+  <div id="error" class="error" style="display:none"></div>
 </main>
 
 <!-- FULLSCREEN PLAYER -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <button class="close" id="close">⬅ Back</button>
-    <iframe id="player" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>
   </div>
 </div>
 
 <script>
-const API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4';
+const API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4'; // ⚠️ baad me hide karna
 let nextPageToken = '', currentQuery = 'trending', loading = false;
 
 const grid = document.getElementById('grid');
 const loader = document.getElementById('loader');
+const errorBox = document.getElementById('error');
 const modal = document.getElementById('modal');
 const player = document.getElementById('player');
 const closeBtn = document.getElementById('close');
+const searchInput = document.getElementById('q');
 
 function buildCard(item){
+  // sirf video hi
+  if(!item.id?.videoId) return null;
+
+  const thumb = item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium.url;
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `
     <div class="thumb">
-      <img src="${item.snippet.thumbnails.high.url}" loading="lazy">
+      <img src="${thumb}" alt="${item.snippet.title}" loading="lazy">
       <div class="play-btn"></div>
     </div>
     <div class="info">
@@ -250,59 +264,75 @@ function buildCard(item){
   return card;
 }
 
-/* 🔥 FIX: AUDIO + FULLSCREEN SAFE PLAYER */
 function openModal(videoId){
-
   closeModal();
-
   const origin = window.location.origin;
-
-  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&controls=1&origin=${origin}`;
-
+  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&controls=1&modestbranding=1&origin=${origin}&playsinline=1`;
   modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
-/* 🔥 FIX: STOP AUDIO COMPLETELY */
 function closeModal(){
   modal.classList.remove('active');
   player.src = '';
+  document.body.style.overflow = 'auto';
 }
 
 closeBtn.onclick = closeModal;
 modal.onclick = (e)=>{ if(e.target === modal) closeModal() };
 document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal() });
 
-async function loadVideos(){
-  if(loading || !nextPageToken && grid.children.length>0) return;
+async function loadVideos(reset = false){
+  if(loading) return;
+  if(!nextPageToken && grid.children.length > 0) return;
 
   loading = true;
   loader.style.display = 'block';
+  errorBox.style.display = 'none';
 
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${currentQuery}&key=${API_KEY}&pageToken=${nextPageToken}`;
+  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${encodeURIComponent(currentQuery)}&key=${API_KEY}`;
+  if(nextPageToken) url += `&pageToken=${nextPageToken}`;
 
-  const res = await fetch(url);
-  const data = await res.json();
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
+    if(data.error) throw new Error(data.error.message);
 
-  nextPageToken = data.nextPageToken || '';
+    nextPageToken = data.nextPageToken || '';
+    
+    data.items.forEach(item=>{
+      const card = buildCard(item);
+      if(card) grid.appendChild(card);
+    });
 
-  data.items.forEach(item=>grid.appendChild(buildCard(item)));
-
-  loader.style.display = nextPageToken ? 'block':'none';
+    loader.style.display = nextPageToken ? 'block':'none';
+  }catch(err){
+    console.error(err);
+    errorBox.textContent = 'Error: ' + err.message + '. API Key ya Quota check karo.';
+    errorBox.style.display = 'block';
+    loader.style.display = 'none';
+  }
   loading = false;
 }
 
+// Infinite Scroll
 window.addEventListener('scroll',()=>{
-  if((window.innerHeight + window.scrollY) >= document.body.offsetHeight-500){
+  if((window.innerHeight + window.scrollY) >= document.body.offsetHeight-600){
     loadVideos();
   }
 });
 
 document.getElementById('go').onclick = ()=>{
-  currentQuery = document.getElementById('q').value || 'trending';
+  currentQuery = searchInput.value.trim() || 'trending';
   grid.innerHTML = '';
   nextPageToken = '';
-  loadVideos();
+  loader.textContent = 'Loading more...';
+  loadVideos(true);
 };
+
+searchInput.addEventListener('keydown', e=>{
+  if(e.key === 'Enter') document.getElementById('go').click();
+})
 
 loadVideos();
 </script>
