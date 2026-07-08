@@ -20,6 +20,200 @@ body{
   height:100vh;
 }
 
+/* SPLASH SCREEN / BRAND ANIMATION */
+.splash-screen{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  background:linear-gradient(135deg, #050A18, #0F172A);
+  z-index:9999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  gap:24px;
+  animation:fadeOutSplash 0.6s ease-out 4s forwards;
+}
+
+.splash-screen.hidden{
+  display:none;
+}
+
+@keyframes fadeOutSplash{
+  from{opacity:1;backdrop-filter:blur(0)}
+  to{opacity:0;backdrop-filter:blur(12px);pointer-events:none}
+}
+
+/* SWORD CROSS ANIMATION */
+.sword-container{
+  position:relative;
+  width:300px;
+  height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.sword{
+  position:absolute;
+  width:200px;
+  height:20px;
+  background:linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+  box-shadow:0 0 20px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.5);
+  border-radius:10px;
+  transform-origin:center;
+}
+
+.sword-left{
+  animation:swordCrossLeft 1.2s ease-in-out forwards;
+}
+
+.sword-right{
+  animation:swordCrossRight 1.2s ease-in-out forwards;
+}
+
+@keyframes swordCrossLeft{
+  0%{
+    transform:rotate(-45deg) translateX(-80px);
+    opacity:0;
+  }
+  50%{
+    opacity:1;
+  }
+  100%{
+    transform:rotate(-45deg) translateX(0);
+    opacity:1;
+  }
+}
+
+@keyframes swordCrossRight{
+  0%{
+    transform:rotate(45deg) translateX(80px);
+    opacity:0;
+  }
+  50%{
+    opacity:1;
+  }
+  100%{
+    transform:rotate(45deg) translateX(0);
+    opacity:1;
+  }
+}
+
+/* SHIELD (DHAL) FALLING ANIMATION */
+.shield-container{
+  position:absolute;
+  width:180px;
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  animation:shieldFall 1.2s ease-in 1.2s forwards;
+  opacity:0;
+}
+
+@keyframes shieldFall{
+  0%{
+    opacity:0;
+    transform:translateY(-250px) scale(0.3) rotateX(90deg);
+  }
+  50%{
+    opacity:1;
+  }
+  100%{
+    opacity:1;
+    transform:translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+/* SHIELD SVG STYLING */
+.shield{
+  width:180px;
+  height:180px;
+  filter:drop-shadow(0 0 30px rgba(79, 70, 229, 0.8));
+}
+
+.shield-outer{
+  fill:#4F46E5;
+  stroke:#00F2FE;
+  stroke-width:3;
+  filter:drop-shadow(0 0 15px rgba(0, 242, 254, 0.6));
+}
+
+.shield-inner{
+  fill:#0F172A;
+  stroke:#00F2FE;
+  stroke-width:2;
+}
+
+/* BHATI TEXT ANIMATION */
+.bhati-text{
+  position:absolute;
+  bottom:30px;
+  font-size:48px;
+  font-weight:900;
+  letter-spacing:4px;
+  background:linear-gradient(135deg, var(--neon), var(--neon2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  opacity:0;
+  animation:bhatiAppear 0.8s ease-out 2.2s forwards;
+  text-shadow:0 0 30px rgba(0, 242, 254, 0.5);
+}
+
+@keyframes bhatiAppear{
+  0%{
+    opacity:0;
+    transform:scale(0.5) translateY(20px);
+  }
+  100%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+}
+
+/* Sword glow effect */
+.sword::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  animation:swordGlow 1.5s ease-in-out infinite;
+  border-radius:10px;
+}
+
+@keyframes swordGlow{
+  0%{opacity:0}
+  50%{opacity:1}
+  100%{opacity:0}
+}
+
+/* Particles around shield */
+.particle{
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:var(--neon);
+  border-radius:50%;
+  opacity:0;
+  animation:particleFloat 2s ease-out forwards;
+}
+
+@keyframes particleFloat{
+  0%{
+    opacity:0.8;
+    transform:translate(0,0) scale(1);
+  }
+  100%{
+    opacity:0;
+    transform:translate(var(--tx),var(--ty)) scale(0);
+  }
+}
+
+/* END SPLASH SCREEN */
+
 header{
   position:sticky;
   top:0;
@@ -293,11 +487,57 @@ main{padding:18px 12px 80px}
   .short{aspect-ratio:16/9}
   .short .short-inner{aspect-ratio:16/9}
   .volume-badge{top:10px;right:10px;font-size:11px;padding:6px 10px}
+  
+  .sword-container{
+    width:250px;
+    height:250px;
+  }
+  .sword{
+    width:150px;
+  }
+  .shield-container{
+    width:140px;
+    height:140px;
+  }
+  .shield{
+    width:140px;
+    height:140px;
+  }
+  .bhati-text{
+    font-size:36px;
+  }
 }
 </style>
 </head>
 
 <body>
+
+<!-- SPLASH SCREEN WITH BRAND ANIMATION -->
+<div id="splashScreen" class="splash-screen">
+  <div class="sword-container">
+    <!-- LEFT SWORD -->
+    <div class="sword sword-left"></div>
+    
+    <!-- RIGHT SWORD -->
+    <div class="sword sword-right"></div>
+    
+    <!-- SHIELD (DHAL) FALLING FROM TOP -->
+    <div class="shield-container" id="shieldContainer">
+      <svg class="shield" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shield outer -->
+        <path class="shield-outer" d="M 100 20 L 160 60 L 160 120 Q 100 180 100 180 Q 100 180 40 120 L 40 60 Z"/>
+        <!-- Shield inner -->
+        <path class="shield-inner" d="M 100 40 L 145 75 L 145 115 Q 100 160 100 160 Q 100 160 55 115 L 55 75 Z"/>
+        <!-- Shield accent -->
+        <circle cx="100" cy="90" r="20" fill="none" stroke="#00F2FE" stroke-width="2" opacity="0.6"/>
+      </svg>
+      <div class="bhati-text" id="bhatiText">भाटी</div>
+    </div>
+  </div>
+  
+  <!-- Particles container -->
+  <div id="particlesContainer"></div>
+</div>
 
 <header>
   <div class="search-wrap">
@@ -334,6 +574,40 @@ main{padding:18px 12px 80px}
   - No extra video loading
   - Volume unmutes automatically on shorts
 */
+
+// SPLASH SCREEN LOGIC
+function initSplashScreen(){
+  const shieldContainer = document.getElementById('shieldContainer');
+  const particlesContainer = document.getElementById('particlesContainer');
+  
+  // Create particles that emit from shield
+  setTimeout(() => {
+    for(let i = 0; i < 16; i++){
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      const angle = (i / 16) * Math.PI * 2;
+      const distance = 180;
+      const tx = Math.cos(angle) * distance;
+      const ty = Math.sin(angle) * distance;
+      const delay = 2.2 + (i * 0.05);
+      particle.style.setProperty('--tx', tx + 'px');
+      particle.style.setProperty('--ty', ty + 'px');
+      particle.style.animationDelay = delay + 's';
+      particle.style.left = '50%';
+      particle.style.top = '50%';
+      particle.style.transform = 'translate(-50%, -50%)';
+      particlesContainer.appendChild(particle);
+    }
+  }, 1200);
+  
+  // Hide splash after animation
+  setTimeout(() => {
+    document.getElementById('splashScreen').classList.add('hidden');
+  }, 4000);
+}
+
+// Initialize splash on page load
+initSplashScreen();
 
 const PRIMARY_API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4';
 const SECONDARY_API_KEY = 'AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw';
