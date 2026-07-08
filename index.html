@@ -146,10 +146,15 @@ header{
   transition:0.15s;
   font-size:12px;
 }
+
 .toggle-btn.active{
   background:linear-gradient(135deg,var(--neon),var(--neon2));
   color:#000;
   transform:scale(1.02);
+}
+
+.toggle-btn.hidden{
+  display:none;
 }
 
 main{padding:18px 12px 80px}
@@ -241,6 +246,7 @@ main{padding:18px 12px 80px}
   gap:0;
   padding:0;
 }
+
 .short{
   width:100%;
   aspect-ratio:16/9;
@@ -251,6 +257,7 @@ main{padding:18px 12px 80px}
   position:relative;
   margin-bottom:0px;
 }
+
 .short .short-inner{
   width:100%;
   height:100%;
@@ -260,6 +267,7 @@ main{padding:18px 12px 80px}
   justify-content:flex-end;
   aspect-ratio:16/9;
 }
+
 .short iframe{
   position:absolute;
   inset:0;
@@ -268,12 +276,14 @@ main{padding:18px 12px 80px}
   border:0;
   background:#000;
 }
+
 .short .short-meta{
   position:relative;
   z-index:10;
   padding:18px;
   background:linear-gradient(180deg,transparent,rgba(0,0,0,0.55));
 }
+
 .short .title{font-size:18px}
 .short .channel{font-size:14px}
 
@@ -291,6 +301,7 @@ main{padding:18px 12px 80px}
   font-size:12px;
   animation:slideIn 0.4s ease-out;
 }
+
 @keyframes slideIn{
   from{transform:translateX(100px);opacity:0}
   to{transform:translateX(0);opacity:1}
@@ -306,17 +317,21 @@ main{padding:18px 12px 80px}
   z-index:100;
   display:none;
 }
+
 .modal.active{display:block}
+
 .modal-content{
   width:100%;
   height:100%;
   position:relative;
 }
+
 .modal-content iframe{
   width:100%;
   height:100%;
   border:0;
 }
+
 .close{
   position:absolute;
   top:15px;
@@ -374,7 +389,7 @@ main{padding:18px 12px 80px}
 
   <div class="header-controls" aria-hidden="false">
     <button id="turbo-toggle" class="toggle-btn active" title="Turbo Net Mode - Minimum Data Usage">Turbo: ON</button>
-    <button id="shorts-toggle" class="toggle-btn" title="Grid view (card layout)">Shorts: OFF</button>
+    <button id="shorts-toggle" class="toggle-btn hidden" title="Shorts view (16:9 full-width)">Shorts: OFF</button>
   </div>
 </header>
 
@@ -396,10 +411,10 @@ main{padding:18px 12px 80px}
 /*
   🎯 LITETUBE PRO - ULTRA-LITE VERSION
   - Turbo default ON: Maximum network optimization
-  - No extra video loading
-  - No recommendations
+  - Shorts button HIDDEN when turbo ON
+  - Shorts button VISIBLE when turbo OFF
   - Grid mode default (no shorts auto-load)
-  - 240p video quality always
+  - 240p video quality always in turbo
   - Blurred thumbnails - click to see clear
 */
 
@@ -438,8 +453,8 @@ let secondaryPageToken = '';
 let primaryExhausted = false;
 let secondaryExhausted = false;
 
-let turboEnabled = true; // DEFAULT ON - MAXIMUM OPTIMIZATION
-let shortsMode = false; // DEFAULT OFF - Grid view
+let turboEnabled = true; // DEFAULT ON
+let shortsMode = false; // DEFAULT OFF
 let videoQuality = '240'; // Always 240p
 
 const grid = document.getElementById('grid');
@@ -481,14 +496,14 @@ function buildShortCard(item){
   const videoId = item.id.videoId;
   const title = item.snippet.title;
   const channel = item.snippet.channelTitle;
-  const thumb = getLowQualityThumb(item);
+  const thumb = item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium?.url || '';
   const short = document.createElement('div');
   short.className = 'short';
   short.dataset.videoId = videoId;
   short.innerHTML = `
     <div class="short-inner">
       <div class="thumb" style="flex:1;position:relative">
-        <img src="${thumb}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover;filter:blur(4px) brightness(0.5)">
+        <img src="${thumb}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.8)">
       </div>
       <div class="short-meta">
         <div class="title">${escapeHtml(title)}</div>
@@ -521,6 +536,7 @@ function closeModal(){
   player.src = '';
   document.body.style.overflow = 'auto';
 }
+
 closeBtn.onclick = closeModal;
 modal.onclick = (e)=>{ if(e.target === modal) closeModal() };
 document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal() });
@@ -555,7 +571,7 @@ function ensureShortsObserver(){
           ifr.allow = 'autoplay; encrypted-media; picture-in-picture';
           ifr.allowFullscreen = true;
           ifr.referrerPolicy = 'no-referrer';
-          ifr.src = `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&controls=1&modestbranding=1&origin=${origin}&playsinline=1&mute=0&vq=small`;
+          ifr.src = `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&rel=0&controls=1&modestbranding=1&origin=${origin}&playsinline=1&mute=0`;
           container.appendChild(ifr);
           showVolumeUnmuteBadge(el);
           document.querySelectorAll('.short .iframe-container').forEach(c=>{
@@ -640,12 +656,6 @@ async function loadVideos(reset = false){
       if(!secondaryPageToken) secondaryExhausted = true;
     }
 
-    // In turbo mode, don't auto-load when primary exhausted
-    if(currentApi === 'primary' && primaryExhausted && !secondaryExhausted){
-      currentApi = 'secondary';
-      // Don't auto-fetch - wait for manual scroll
-    }
-
     const moreOnActive = (currentApi === 'primary') ? !!primaryPageToken : !!secondaryPageToken;
     const moreOnOther = (currentApi === 'primary') ? (!!secondaryPageToken && !secondaryExhausted) : (!!primaryPageToken && !primaryExhausted);
 
@@ -706,6 +716,19 @@ turboBtn.onclick = ()=>{
   turboEnabled = !turboEnabled;
   turboBtn.textContent = turboEnabled ? 'Turbo: ON' : 'Turbo: OFF';
   turboBtn.classList.toggle('active');
+  
+  // Hide shorts button when turbo ON, show when turbo OFF
+  shortsBtn.classList.toggle('hidden', turboEnabled);
+  
+  // If switching to turbo (ON), disable shorts mode
+  if(turboEnabled && shortsMode){
+    shortsMode = false;
+    shortsBtn.textContent = 'Shorts: OFF';
+    shortsBtn.classList.remove('active');
+  }
+  
+  grid.innerHTML = '';
+  loadVideos(true);
 };
 
 shortsBtn.onclick = ()=>{
