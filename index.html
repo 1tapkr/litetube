@@ -33,7 +33,7 @@ body{
   justify-content:center;
   flex-direction:column;
   gap:24px;
-  animation:fadeOutSplash 0.6s ease-out 4s forwards;
+  animation:fadeOutSplash 0.6s ease-out 5.2s forwards;
 }
 
 .splash-screen.hidden{
@@ -48,34 +48,30 @@ body{
 /* SWORD CROSS ANIMATION */
 .sword-container{
   position:relative;
-  width:300px;
-  height:300px;
+  width:400px;
+  height:400px;
   display:flex;
   align-items:center;
   justify-content:center;
 }
 
+/* REAL SWORD DESIGN */
 .sword{
   position:absolute;
-  width:200px;
-  height:20px;
-  background:linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
-  box-shadow:0 0 20px rgba(255, 215, 0, 0.8), inset 0 0 10px rgba(255, 255, 255, 0.5);
-  border-radius:10px;
   transform-origin:center;
 }
 
 .sword-left{
-  animation:swordCrossLeft 1.2s ease-in-out forwards;
+  animation:swordCrossLeft 1s ease-in-out forwards;
 }
 
 .sword-right{
-  animation:swordCrossRight 1.2s ease-in-out forwards;
+  animation:swordCrossRight 1s ease-in-out forwards;
 }
 
 @keyframes swordCrossLeft{
   0%{
-    transform:rotate(-45deg) translateX(-80px);
+    transform:rotate(-45deg) translateX(-150px);
     opacity:0;
   }
   50%{
@@ -89,7 +85,7 @@ body{
 
 @keyframes swordCrossRight{
   0%{
-    transform:rotate(45deg) translateX(80px);
+    transform:rotate(45deg) translateX(150px);
     opacity:0;
   }
   50%{
@@ -101,22 +97,60 @@ body{
   }
 }
 
+/* REVERSE SWORD ANIMATION */
+@keyframes swordReverseLeft{
+  0%{
+    transform:rotate(-45deg) translateX(0);
+    opacity:1;
+  }
+  100%{
+    transform:rotate(-45deg) translateX(-150px);
+    opacity:0;
+  }
+}
+
+@keyframes swordReverseRight{
+  0%{
+    transform:rotate(45deg) translateX(0);
+    opacity:1;
+  }
+  100%{
+    transform:rotate(45deg) translateX(150px);
+    opacity:0;
+  }
+}
+
+.sword-left.reverse{
+  animation:swordReverseLeft 1s ease-in-out 3.5s forwards;
+}
+
+.sword-right.reverse{
+  animation:swordReverseRight 1s ease-in-out 3.5s forwards;
+}
+
+/* SVG SWORD STYLING */
+.sword-svg{
+  width:240px;
+  height:240px;
+  filter:drop-shadow(0 0 25px rgba(255, 215, 0, 0.8));
+}
+
 /* SHIELD (DHAL) FALLING ANIMATION */
 .shield-container{
   position:absolute;
-  width:180px;
-  height:180px;
+  width:200px;
+  height:200px;
   display:flex;
   align-items:center;
   justify-content:center;
-  animation:shieldFall 1.2s ease-in 1.2s forwards;
+  animation:shieldFall 1.2s ease-in 1s forwards;
   opacity:0;
 }
 
 @keyframes shieldFall{
   0%{
     opacity:0;
-    transform:translateY(-250px) scale(0.3) rotateX(90deg);
+    transform:translateY(-350px) scale(0.2) rotateX(90deg);
   }
   50%{
     opacity:1;
@@ -127,11 +161,27 @@ body{
   }
 }
 
+/* SHIELD REVERSE (goes back up) */
+@keyframes shieldReverse{
+  0%{
+    opacity:1;
+    transform:translateY(0) scale(1) rotateX(0deg);
+  }
+  100%{
+    opacity:0;
+    transform:translateY(-350px) scale(0.2) rotateX(90deg);
+  }
+}
+
+.shield-container.reverse{
+  animation:shieldReverse 1.2s ease-out 3.5s forwards;
+}
+
 /* SHIELD SVG STYLING */
-.shield{
-  width:180px;
-  height:180px;
-  filter:drop-shadow(0 0 30px rgba(79, 70, 229, 0.8));
+.shield-svg{
+  width:200px;
+  height:200px;
+  filter:drop-shadow(0 0 35px rgba(79, 70, 229, 0.9));
 }
 
 .shield-outer{
@@ -147,26 +197,48 @@ body{
   stroke-width:2;
 }
 
-/* BHATI TEXT ANIMATION */
+.shield-gem{
+  fill:#FFD700;
+  filter:drop-shadow(0 0 12px rgba(255, 215, 0, 0.8));
+}
+
+/* BHATI TEXT ANIMATION - ENGLISH */
 .bhati-text{
   position:absolute;
-  bottom:30px;
-  font-size:48px;
+  bottom:20px;
+  font-size:56px;
   font-weight:900;
-  letter-spacing:4px;
-  background:linear-gradient(135deg, var(--neon), var(--neon2));
+  letter-spacing:6px;
+  background:linear-gradient(135deg, #FFD700, var(--neon), var(--neon2));
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
   background-clip:text;
   opacity:0;
-  animation:bhatiAppear 0.8s ease-out 2.2s forwards;
+  animation:bhatiAppear 0.8s ease-out 2s forwards;
   text-shadow:0 0 30px rgba(0, 242, 254, 0.5);
+  font-family:'Arial', sans-serif;
+}
+
+/* BHATI DISAPPEAR ANIMATION */
+@keyframes bhatiDisappear{
+  0%{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+  100%{
+    opacity:0;
+    transform:scale(0.5) translateY(-30px);
+  }
+}
+
+.bhati-text.disappear{
+  animation:bhatiDisappear 0.8s ease-out 3.5s forwards;
 }
 
 @keyframes bhatiAppear{
   0%{
     opacity:0;
-    transform:scale(0.5) translateY(20px);
+    transform:scale(0.5) translateY(30px);
   }
   100%{
     opacity:1;
@@ -174,36 +246,21 @@ body{
   }
 }
 
-/* Sword glow effect */
-.sword::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  animation:swordGlow 1.5s ease-in-out infinite;
-  border-radius:10px;
-}
-
-@keyframes swordGlow{
-  0%{opacity:0}
-  50%{opacity:1}
-  100%{opacity:0}
-}
-
 /* Particles around shield */
 .particle{
   position:absolute;
-  width:6px;
-  height:6px;
+  width:8px;
+  height:8px;
   background:var(--neon);
   border-radius:50%;
   opacity:0;
-  animation:particleFloat 2s ease-out forwards;
+  animation:particleFloat 2.2s ease-out forwards;
+  box-shadow:0 0 12px var(--neon);
 }
 
 @keyframes particleFloat{
   0%{
-    opacity:0.8;
+    opacity:0.9;
     transform:translate(0,0) scale(1);
   }
   100%{
@@ -489,22 +546,24 @@ main{padding:18px 12px 80px}
   .volume-badge{top:10px;right:10px;font-size:11px;padding:6px 10px}
   
   .sword-container{
-    width:250px;
-    height:250px;
+    width:300px;
+    height:300px;
   }
-  .sword{
-    width:150px;
+  .sword-svg{
+    width:180px;
+    height:180px;
   }
   .shield-container{
-    width:140px;
-    height:140px;
+    width:150px;
+    height:150px;
   }
-  .shield{
-    width:140px;
-    height:140px;
+  .shield-svg{
+    width:150px;
+    height:150px;
   }
   .bhati-text{
-    font-size:36px;
+    font-size:40px;
+    letter-spacing:4px;
   }
 }
 </style>
@@ -512,26 +571,71 @@ main{padding:18px 12px 80px}
 
 <body>
 
-<!-- SPLASH SCREEN WITH BRAND ANIMATION -->
+<!-- SPLASH SCREEN WITH REAL SWORD ANIMATION -->
 <div id="splashScreen" class="splash-screen">
   <div class="sword-container">
     <!-- LEFT SWORD -->
-    <div class="sword sword-left"></div>
+    <div class="sword sword-left" id="swordLeft">
+      <svg class="sword-svg" viewBox="0 0 100 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Blade -->
+        <path d="M 45 10 L 55 10 L 52 150 L 48 150 Z" fill="#E8E8E8" stroke="#B0B0B0" stroke-width="1"/>
+        <!-- Blade shine -->
+        <path d="M 48 20 L 50 20 L 48.5 140 L 48 140 Z" fill="#FFFFFF" opacity="0.7"/>
+        <!-- Sharp point -->
+        <polygon points="50,150 48,170 52,170" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+        <!-- Guard (crossbar) -->
+        <rect x="40" y="155" width="20" height="8" fill="#FFD700" stroke="#DAA520" stroke-width="1" rx="2"/>
+        <rect x="42" y="157" width="16" height="4" fill="#FFA500" stroke="#DAA520" stroke-width="0.5"/>
+        <!-- Handle -->
+        <rect x="44" y="163" width="12" height="50" fill="#8B4513" stroke="#654321" stroke-width="1" rx="2"/>
+        <!-- Handle wrap -->
+        <line x1="44" y1="173" x2="56" y2="173" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <line x1="44" y1="183" x2="56" y2="183" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <line x1="44" y1="193" x2="56" y2="193" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <!-- Pommel -->
+        <circle cx="50" cy="217" r="5" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+        <circle cx="50" cy="217" r="3" fill="#FFA500"/>
+      </svg>
+    </div>
     
     <!-- RIGHT SWORD -->
-    <div class="sword sword-right"></div>
+    <div class="sword sword-right" id="swordRight">
+      <svg class="sword-svg" viewBox="0 0 100 240" xmlns="http://www.w3.org/2000/svg">
+        <!-- Blade -->
+        <path d="M 45 10 L 55 10 L 52 150 L 48 150 Z" fill="#E8E8E8" stroke="#B0B0B0" stroke-width="1"/>
+        <!-- Blade shine -->
+        <path d="M 48 20 L 50 20 L 48.5 140 L 48 140 Z" fill="#FFFFFF" opacity="0.7"/>
+        <!-- Sharp point -->
+        <polygon points="50,150 48,170 52,170" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+        <!-- Guard (crossbar) -->
+        <rect x="40" y="155" width="20" height="8" fill="#FFD700" stroke="#DAA520" stroke-width="1" rx="2"/>
+        <rect x="42" y="157" width="16" height="4" fill="#FFA500" stroke="#DAA520" stroke-width="0.5"/>
+        <!-- Handle -->
+        <rect x="44" y="163" width="12" height="50" fill="#8B4513" stroke="#654321" stroke-width="1" rx="2"/>
+        <!-- Handle wrap -->
+        <line x1="44" y1="173" x2="56" y2="173" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <line x1="44" y1="183" x2="56" y2="183" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <line x1="44" y1="193" x2="56" y2="193" stroke="#DAA520" stroke-width="1" opacity="0.8"/>
+        <!-- Pommel -->
+        <circle cx="50" cy="217" r="5" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+        <circle cx="50" cy="217" r="3" fill="#FFA500"/>
+      </svg>
+    </div>
     
     <!-- SHIELD (DHAL) FALLING FROM TOP -->
     <div class="shield-container" id="shieldContainer">
-      <svg class="shield" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <svg class="shield-svg" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
         <!-- Shield outer -->
-        <path class="shield-outer" d="M 100 20 L 160 60 L 160 120 Q 100 180 100 180 Q 100 180 40 120 L 40 60 Z"/>
-        <!-- Shield inner -->
-        <path class="shield-inner" d="M 100 40 L 145 75 L 145 115 Q 100 160 100 160 Q 100 160 55 115 L 55 75 Z"/>
-        <!-- Shield accent -->
-        <circle cx="100" cy="90" r="20" fill="none" stroke="#00F2FE" stroke-width="2" opacity="0.6"/>
+        <path class="shield-outer" d="M 100 20 L 170 70 L 170 130 Q 100 200 100 200 Q 100 200 30 130 L 30 70 Z"/>
+        <!-- Shield inner highlight -->
+        <path class="shield-inner" d="M 100 40 L 155 85 L 155 125 Q 100 180 100 180 Q 100 180 45 125 L 45 85 Z"/>
+        <!-- Central gem/diamond -->
+        <circle class="shield-gem" cx="100" cy="110" r="18"/>
+        <circle cx="100" cy="110" r="15" fill="none" stroke="#FFD700" stroke-width="2" opacity="0.8"/>
+        <!-- Inner shine -->
+        <circle cx="100" cy="108" r="10" fill="#FFED4E" opacity="0.6"/>
       </svg>
-      <div class="bhati-text" id="bhatiText">भाटी</div>
+      <div class="bhati-text" id="bhatiText">BHATI</div>
     </div>
   </div>
   
@@ -577,19 +681,22 @@ main{padding:18px 12px 80px}
 
 // SPLASH SCREEN LOGIC
 function initSplashScreen(){
+  const swordLeft = document.getElementById('swordLeft');
+  const swordRight = document.getElementById('swordRight');
   const shieldContainer = document.getElementById('shieldContainer');
+  const bhatiText = document.getElementById('bhatiText');
   const particlesContainer = document.getElementById('particlesContainer');
   
-  // Create particles that emit from shield
+  // Create particles that emit from shield at 2s mark
   setTimeout(() => {
     for(let i = 0; i < 16; i++){
       const particle = document.createElement('div');
       particle.className = 'particle';
       const angle = (i / 16) * Math.PI * 2;
-      const distance = 180;
+      const distance = 220;
       const tx = Math.cos(angle) * distance;
       const ty = Math.sin(angle) * distance;
-      const delay = 2.2 + (i * 0.05);
+      const delay = 2 + (i * 0.08);
       particle.style.setProperty('--tx', tx + 'px');
       particle.style.setProperty('--ty', ty + 'px');
       particle.style.animationDelay = delay + 's';
@@ -598,12 +705,20 @@ function initSplashScreen(){
       particle.style.transform = 'translate(-50%, -50%)';
       particlesContainer.appendChild(particle);
     }
-  }, 1200);
+  }, 1000);
   
-  // Hide splash after animation
+  // REVERSE ANIMATION at 3.5s - swords go back
+  setTimeout(() => {
+    swordLeft.classList.add('reverse');
+    swordRight.classList.add('reverse');
+    shieldContainer.classList.add('reverse');
+    bhatiText.classList.add('disappear');
+  }, 3500);
+  
+  // Hide splash after animation completes
   setTimeout(() => {
     document.getElementById('splashScreen').classList.add('hidden');
-  }, 4000);
+  }, 5200);
 }
 
 // Initialize splash on page load
