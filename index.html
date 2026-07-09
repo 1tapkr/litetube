@@ -26,7 +26,6 @@ header{position:sticky;top:0;z-index:20;background:rgba(5,10,24,0.85);backdrop-f
 .header-controls{display:flex;gap:8px;align-items:center}
 .toggle-btn{min-width:44px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer;font-weight:700;transition:0.15s;font-size:12px}
 .toggle-btn.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;transform:scale(1.02)}
-.toggle-btn.hidden{display:none}
 main{padding:18px 12px 80px}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;max-width:1600px;margin:0 auto}
@@ -60,7 +59,7 @@ main{padding:18px 12px 80px}
 
 .card{background:var(--card);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:0.28s}
 .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.45);border-color:var(--neon)}
-.thumb img{width:100%;height:100%;object-fit:cover;transition:0.4s;filter:blur(3px) brightness(0.6)}
+.thumb img{width:100%;height:100%;object-fit:cover;transition:0.4s;filter:blur(1px) brightness(0.8)} /* Blur kam kar diya */
 .card:hover.thumb img{filter:blur(0px) brightness(1);transform:scale(1.02)}
 .thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
 .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(0,242,254,0.86);border-radius:50%;display:grid;place-items:center;opacity:0;transition:0.22s}
@@ -129,19 +128,21 @@ function initSplashScreen(){
 }
 initSplashScreen();
 
-const PRIMARY_API_KEY = 'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4';
-const SECONDARY_API_KEY = 'AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw';
+const API_KEYS = [
+  'AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4',
+  'AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw'
+];
+let keyIndex = 0; // konsa key chal raha
 
 let currentQuery = 'trending';
 let loading = false;
-let currentApi = 'primary';
 let primaryPageToken = '';
 let secondaryPageToken = '';
 let primaryExhausted = false;
 let secondaryExhausted = false;
 
-let turboEnabled = true; // DEFAULT ON
-let shortsMode = false; // DEFAULT OFF - ab direct shorts nahi
+let turboEnabled = true;
+let shortsMode = false;
 
 const grid = document.getElementById('grid');
 const loader = document.getElementById('loader');
@@ -154,11 +155,14 @@ const turboBtn = document.getElementById('turbo-toggle');
 const shortsBtn = document.getElementById('shorts-toggle');
 const shortsBackBtn = document.getElementById('shortsBack');
 
-function getLowQualityThumb(item){return item.snippet.thumbnails.default?.url || ''}
+// THUMBNAIL MEDIUM KAR DIYA - HD nahi, par saaf dikhega
+function getThumb(item){
+  return item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url || '';
+}
 
 function buildGridCard(item){
   if(!item.id?.videoId) return null;
-  const thumb = getLowQualityThumb(item);
+  const thumb = getThumb(item);
   const card = document.createElement('div');
   card.className = 'card';
   card.innerHTML = `<div class="thumb"><img src="${thumb}" alt="${escapeHtml(item.snippet.title)}" loading="lazy"><div class="play-btn"></div></div><div class="info"><div class="title">${escapeHtml(item.snippet.title)}</div><div class="channel">${escapeHtml(item.snippet.channelTitle)}</div></div>`;
@@ -171,7 +175,7 @@ function buildShortCard(item, index){
   const videoId = item.id.videoId;
   const title = item.snippet.title;
   const channel = item.snippet.channelTitle;
-  const thumb = getLowQualityThumb(item);
+  const thumb = getThumb(item);
   const short = document.createElement('div');
   short.className = 'short';
   short.dataset.videoId = videoId;
@@ -195,8 +199,8 @@ closeBtn.onclick = closeModal;
 modal.onclick = (e)=>{ if(e.target === modal) closeModal() };
 document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal() });
 
-function buildUrl(api, pageToken){
-  const key = (api === 'primary')? PRIMARY_API_KEY : SECONDARY_API_KEY;
+function buildUrl(pageToken){
+  const key = API_KEYS[keyIndex];
   let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${encodeURIComponent(currentQuery)}&key=${key}`;
   if(pageToken) url += `&pageToken=${pageToken}`;
   return url;
@@ -214,8 +218,7 @@ function ensureShortsObserver(){
         const vid = el.dataset.videoId;
         if(container &&!container.querySelector('iframe')){
           const origin = window.location.origin!== 'null'? `&origin=${window.location.origin}` : '';
-          // Pehla video mute, baaki unmute
-          const mute = idx === 0? 1 : 0;
+          const mute = idx === 0? 1 : 0; // pehla mute, baaki unmute
           const ifr = document.createElement('iframe');
           ifr.allow = 'autoplay; encrypted-media; picture-in-picture';
           ifr.allowFullscreen = true;
@@ -249,36 +252,74 @@ async function loadVideos(reset = false){
   if(loading) return;
   if(reset){
     if(shortsObserver) shortsObserver.disconnect();
-    primaryPageToken = '';secondaryPageToken = '';primaryExhausted = false;secondaryExhausted = false;currentApi = 'primary';grid.innerHTML = '<button class="shorts-back" id="shortsBack">⬅ Back</button>';
+    primaryPageToken = '';secondaryPageToken = '';primaryExhausted = false;secondaryExhausted = false;keyIndex = 0;
+    grid.innerHTML = '<button class="shorts-back" id="shortsBack">⬅ Back</button>';
     document.getElementById('shortsBack').onclick = ()=>{shortsBtn.click()}
   }
-  if(primaryExhausted && secondaryExhausted){loader.style.display = 'none';return}
-  if(currentApi === 'primary' && primaryExhausted) currentApi = 'secondary';
-  if(currentApi === 'secondary' && secondaryExhausted) currentApi = 'primary';
+  if(primaryExhausted && secondaryExhausted){
+    loader.style.display = 'none';
+    // 153 QUOTA ERROR HANDLE
+    errorBox.textContent = 'API Quota khatam ho gayi. 10 sec me retry hoga...';
+    errorBox.style.display = 'block';
+    setTimeout(()=>{primaryExhausted=false;secondaryExhausted=false;keyIndex=0;loadVideos(true)}, 10000);
+    return;
+  }
+
   loading = true;loader.style.display = 'block';errorBox.style.display = 'none';
-  loader.textContent = currentApi === 'primary'? 'Loading...' : 'Loading (fallback)...';
-  const pageToken = (currentApi === 'primary')? primaryPageToken : secondaryPageToken;
-  const url = buildUrl(currentApi, pageToken);
+  loader.textContent = 'Loading...';
+
+  const pageToken = primaryPageToken || secondaryPageToken;
+  const url = buildUrl(pageToken);
+
   try{
     const res = await fetch(url);
     const data = await res.json();
-    if(data.error) throw new Error(data.error.message || 'API error');
+    if(data.error){
+      // 153 ya 403 quota error
+      if(data.error.code === 403 || data.error.code === 400){
+        keyIndex++;
+        if(keyIndex >= API_KEYS.length) keyIndex = 0;
+        if(keyIndex === 0) primaryExhausted = true; else secondaryExhausted = true;
+        throw new Error('Quota Error 153: ' + data.error.message);
+      } else {
+        throw new Error(data.error.message);
+      }
+    }
+
     appendItems(data.items || []);
-    if(currentApi === 'primary'){primaryPageToken = data.nextPageToken || '';if(!primaryPageToken) primaryExhausted = true}
-    else {secondaryPageToken = data.nextPageToken || '';if(!secondaryPageToken) secondaryExhausted = true}
-    const moreOnActive = (currentApi === 'primary')?!!primaryPageToken :!!secondaryPageToken;
-    const moreOnOther = (currentApi === 'primary')? (!!secondaryPageToken &&!secondaryExhausted) : (!!primaryPageToken &&!primaryExhausted);
-    loader.style.display = (moreOnActive || moreOnOther)? 'block' : 'none';
+
+    if(!primaryPageToken){
+      primaryPageToken = data.nextPageToken || '';
+      if(!primaryPageToken) primaryExhausted = true;
+    } else {
+      secondaryPageToken = data.nextPageToken || '';
+      if(!secondaryPageToken) secondaryExhausted = true;
+    }
+
+    const more =!!data.nextPageToken;
+    loader.style.display = more? 'block' : 'none';
+
   }catch(err){
     console.error(err);
-    if(currentApi === 'primary' &&!secondaryExhausted){primaryExhausted = true;currentApi = 'secondary';errorBox.textContent = 'Switching to fallback...';errorBox.style.display = 'block';loading = false;setTimeout(()=>loadVideos(), 300);return}
-    else {errorBox.textContent = 'Error: ' + err.message;errorBox.style.display = 'block';loader.style.display = 'none'}
+    errorBox.textContent = 'Error: ' + err.message;
+    errorBox.style.display = 'block';
+    loader.style.display = 'none';
+
+    // agar quota error hai to dusri key try karo
+    if(err.message.includes('153') || err.message.includes('Quota')){
+      keyIndex++;
+      if(keyIndex < API_KEYS.length){
+        loading = false;
+        setTimeout(()=>loadVideos(), 500);
+        return;
+      }
+    }
   }
   loading = false;
 }
 
 let scrollDebounce = null;
-window.addEventListener('scroll',()=>{if(scrollDebounce) return;scrollDebounce = setTimeout(()=>{ scrollDebounce = null;if((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100){loadVideos()}}, 150)});
+window.addEventListener('scroll',()=>{if(scrollDebounce) return;scrollDebounce = setTimeout(()=>{ scrollDebounce = null;if((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 200){loadVideos()}}, 200)});
 
 document.getElementById('go').onclick = ()=>{currentQuery = searchInput.value.trim() || 'trending';loadVideos(true)}
 searchInput.addEventListener('keydown', e=>{if(e.key === 'Enter') document.getElementById('go').click()});
@@ -290,7 +331,6 @@ turboBtn.onclick = ()=>{
   loadVideos(true);
 };
 
-// SHORTS BUTTON - ab manual press karna padega
 shortsBtn.onclick = ()=>{
   shortsMode =!shortsMode;
   shortsBtn.textContent = shortsMode? 'Shorts: ON' : 'Shorts: OFF';
@@ -298,7 +338,6 @@ shortsBtn.onclick = ()=>{
   loadVideos(true);
 };
 
-// Back button in shorts
 shortsBackBtn.onclick = ()=>{shortsBtn.click()}
 
 loadVideos();
