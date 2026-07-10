@@ -4,47 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LiteTube Pro</title>
-
 <style>
-:root{
-  --bg:#050A18; --card:#0F172A; --neon:#00F2FE; --neon2:#4F46E5; --text:#E2E8F0;
-}
+:root{--bg:#050A18; --card:#0F172A; --neon:#00F2FE; --neon2:#4F46E5; --text:#E2E8F0;}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,sans-serif;overflow-y:scroll;height:100vh}
-.splash-screen{position:fixed;inset:0;width:100%;height:100%;background:linear-gradient(135deg, #050A18, #0F172A);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;animation:fadeOutSplash 0.6s ease-out 2.5s forwards}
+.splash-screen{position:fixed;inset:0;width:100%;height:100%;background:linear-gradient(135deg, #050A18, #0F172A);z-index:9999;display:flex;align-items:center;justify-content:center;gap:24px;animation:fadeOutSplash 0.4s ease-out 1s forwards}
 .splash-screen.hidden{display:none}
-@keyframes fadeOutSplash{from{opacity:1;backdrop-filter:blur(0)}to{opacity:0;backdrop-filter:blur(12px);pointer-events:none}}
+@keyframes fadeOutSplash{from{opacity:1}to{opacity:0;pointer-events:none}}
 .bhati-container{display:flex;gap:12px;font-size:64px;font-weight:900;letter-spacing:8px;font-family:'Arial Black', sans-serif}
-.bhati-letter{background:linear-gradient(135deg, #FFD700, var(--neon), var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;animation:letterPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;filter:drop-shadow(0 0 15px rgba(0, 242, 254, 0.4))}
-@keyframes letterPop{0%{opacity:0;transform:scale(0) rotateY(-90deg)}100%{opacity:1;transform:scale(1) rotateY(0deg)}}
+.bhati-letter{background:linear-gradient(135deg, #FFD700, var(--neon), var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;animation:letterPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;filter:drop-shadow(0 0 15px rgba(0, 242, 254, 0.4))}
+@keyframes letterPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
 header{position:sticky;top:0;z-index:20;background:rgba(5,10,24,0.85);backdrop-filter:blur(12px);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center;border-bottom:1px solid rgba(0,242,254,0.08)}
-.search-wrap{width:100%;max-width:640px;display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:8px;backdrop-filter:blur(8px);transition:0.3s}
-.search-wrap:focus-within{border-color:var(--neon);box-shadow:0 0 18px rgba(0,242,254,0.14)}
+.search-wrap{width:100%;max-width:640px;display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:8px}
 .search-wrap input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-size:16px;padding:0 12px}
-.search-wrap button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-size:18px;cursor:pointer;transition:0.2s}
-.search-wrap button:hover{transform:scale(1.05)}
+.search-wrap button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-size:18px;cursor:pointer}
 .header-controls{display:flex;gap:8px;align-items:center}
-.toggle-btn{min-width:44px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer;font-weight:700;transition:0.15s;font-size:12px}
-.toggle-btn.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;transform:scale(1.02)}
+.toggle-btn{min-width:44px;padding:8px 12px;border-radius:999px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:var(--text);cursor:pointer;font-weight:700;font-size:12px}
+.toggle-btn.active{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000}
+.toggle-btn.hidden{display:none}
+.quota-banner{background:#ff9500;color:#000;text-align:center;padding:10px;font-weight:700;display:none}
+.demo-badge{background:#4F46E5;color:#fff;font-size:11px;padding:2px 8px;border-radius:999px;margin-left:8px}
 main{padding:18px 12px 80px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;max-width:1600px;margin:0 auto}
-.grid.shorts{display:block;max-width:100%;padding:0;margin:0;scroll-snap-type:y mandatory;overflow-y:scroll;height:calc(100vh - 70px)}
-.short{width:100%;height:100vh;scroll-snap-align:start;background:#000;position:relative;display:flex;align-items:center;justify-content:center}
-.short-inner{width:100%;height:100%;position:relative;display:flex;flex-direction:column;justify-content:flex-end}
-.short iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}
+.grid.shorts{display:block;max-width:100%;scroll-snap-type:y mandatory;overflow-y:scroll;height:calc(100vh - 70px)}
+.short{width:100%;height:100vh;scroll-snap-align:start;background:#000;position:relative}
+.short iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .short-meta{position:absolute;bottom:0;left:0;right:0;z-index:10;padding:24px 18px 80px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.8))}
-.short.title{font-size:16px;font-weight:600}
-.short.channel{font-size:14px;margin-top:4px}
-.play-error{position:absolute;inset:0;background:rgba(0,0,0,0.85);z-index:20;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#ff6b6b;font-weight:600;text-align:center;padding:20px;font-size:14px}
-.shorts-back{position:absolute;top:20px;left:20px;z-index:20;padding:8px 14px;border-radius:999px;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer;backdrop-filter:blur(8px);font-weight:600;display:none}
-.grid.shorts.shorts-back{display:block}
 .card{background:var(--card);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:0.28s}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.45);border-color:var(--neon)}
-.thumb img{width:100%;height:100%;object-fit:cover;transition:0.4s;filter:blur(0.5px) brightness(0.9)}
-.card:hover.thumb img{filter:blur(0px) brightness(1);transform:scale(1.02)}
+.card:hover{transform:translateY(-6px);border-color:var(--neon)}
 .thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.thumb img{width:100%;height:100%;object-fit:cover}
 .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(0,242,254,0.86);border-radius:50%;display:grid;place-items:center;opacity:0;transition:0.22s}
-.card:hover.play-btn{opacity:1}
+.card:hover .play-btn{opacity:1}
 .play-btn::after{content:"";border-left:16px solid #000;border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:3px}
 .info{padding:12px}
 .title{font-size:15px;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -53,15 +44,14 @@ main{padding:18px 12px 80px}
 .modal.active{display:block}
 .modal-content{width:100%;height:100%;position:relative}
 .modal-content iframe{width:100%;height:100%;border:0}
-.close{position:absolute;top:15px;left:15px;z-index:999;padding:8px 14px;border-radius:999px;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer;backdrop-filter:blur(8px);font-weight:600}
+.close{position:absolute;top:15px;left:15px;z-index:999;padding:8px 14px;border-radius:999px;border:none;background:rgba(0,0,0,0.6);color:#fff;cursor:pointer}
 .loader{text-align:center;padding:26px;color:rgba(226,232,240,0.5)}
 .error{text-align:center;padding:20px;color:#ff6b6b}
-@media(max-width:600px){.grid{gap:14px}.bhati-container{font-size:48px;gap:8px;letter-spacing:6px}}
 </style>
 </head>
-
 <body>
 
+<div id="quotaBanner" class="quota-banner">⚠️ API Quota Khatam. <span class="demo-badge">DEMO MODE</span> Cached videos dikh rahe hain</div>
 <div id="splashScreen" class="splash-screen"><div class="bhati-container" id="bhatiContainer"></div></div>
 
 <header>
@@ -70,16 +60,15 @@ main{padding:18px 12px 80px}
 </header>
 
 <main>
-  <div id="grid" class="grid"><button class="shorts-back" id="shortsBack">⬅ Back</button></div>
-  <div id="loader" class="loader">Loading more...</div>
+  <div id="grid" class="grid"></div>
+  <div id="loader" class="loader">Loading...</div>
   <div id="error" class="error" style="display:none"></div>
 </main>
 
 <div id="modal" class="modal">
   <div class="modal-content">
     <button class="close" id="close">⬅ Back</button>
-    <div id="modalError" class="play-error" style="display:none">Ye video play nahi ho rahi<br><small>Embed Blocked</small></div>
-    <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture; web-share" allowfullscreen referrerpolicy="no-referrer"></iframe>
+    <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>
   </div>
 </div>
 
@@ -87,29 +76,24 @@ main{padding:18px 12px 80px}
 function initSplashScreen(){
   const container = document.getElementById('bhatiContainer');
   const text = 'BHATI';
-  let delay = 0;
-  for(let i = 0; i < text.length; i++){
+  text.split('').forEach((char,i)=>{
     const letter = document.createElement('span');
     letter.className = 'bhati-letter';
-    letter.textContent = text[i];
-    letter.style.animationDelay = (delay) + 's';
+    letter.textContent = char;
+    letter.style.animationDelay = (i*0.12) + 's';
     container.appendChild(letter);
-    delay += 0.15;
-  }
-  setTimeout(() => {document.getElementById('splashScreen').classList.add('hidden')}, 2500);
+  });
+  setTimeout(() => {document.getElementById('splashScreen').classList.add('hidden')}, 1000);
 }
 initSplashScreen();
 
+// IMPORTANT: Yaha apni key daalo
 const API_KEYS = ['AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4','AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw'];
 let keyIndex = 0;
-
 let currentQuery = 'trending';
 let loading = false;
-let primaryPageToken = '';
-let secondaryPageToken = '';
-let primaryExhausted = false;
-let secondaryExhausted = false;
-
+let pageToken = '';
+let quotaDead = false;
 let turboEnabled = true;
 let shortsMode = false;
 
@@ -118,156 +102,105 @@ const loader = document.getElementById('loader');
 const errorBox = document.getElementById('error');
 const modal = document.getElementById('modal');
 const player = document.getElementById('player');
-const modalError = document.getElementById('modalError');
 const closeBtn = document.getElementById('close');
 const searchInput = document.getElementById('q');
 const turboBtn = document.getElementById('turbo-toggle');
 const shortsBtn = document.getElementById('shorts-toggle');
-const shortsBackBtn = document.getElementById('shortsBack');
+const quotaBanner = document.getElementById('quotaBanner');
 
-function getThumb(item){
-  return item.snippet.thumbnails.high?.url || item.snippet.thumbnails.medium?.url || item.snippet.thumbnails.default?.url || '';
+function getCacheKey(q, token){ return `litetube_${q}_${token}_${shortsMode}` }
+function getFromCache(key){
+  const item = localStorage.getItem(key);
+  if(!item) return null;
+  const data = JSON.parse(item);
+  if(Date.now() - data.time > 600000) return null; // 10 min cache
+  return data.data;
+}
+function setCache(key, data){
+  localStorage.setItem(key, JSON.stringify({data, time: Date.now()}));
 }
 
-function buildGridCard(item){
+function updateShortsBtnVisibility(){
+  shortsBtn.classList.toggle('hidden', !turboEnabled);
+  if(!turboEnabled && shortsMode){ shortsMode = false; shortsBtn.textContent = 'Shorts: OFF'; loadVideos(true); }
+}
+
+function buildCard(item){
   if(!item.id?.videoId) return null;
-  const thumb = getThumb(item);
+  const thumb = item.snippet.thumbnails.medium?.url;
   const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `<div class="thumb"><img src="${thumb}" alt="${escapeHtml(item.snippet.title)}" loading="lazy"><div class="play-btn"></div></div><div class="info"><div class="title">${escapeHtml(item.snippet.title)}</div><div class="channel">${escapeHtml(item.snippet.channelTitle)}</div></div>`;
-  card.onclick = () => openModal(item.id.videoId);
+  card.className = shortsMode ? 'short' : 'card';
+  if(shortsMode){
+    card.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${item.id.videoId}?autoplay=1&mute=1&loop=1&playlist=${item.id.videoId}" allow="autoplay"></iframe><div class="short-meta"><div class="title">${item.snippet.title}</div><div class="channel">${item.snippet.channelTitle}</div></div>`;
+  } else {
+    card.innerHTML = `<div class="thumb"><img src="${thumb}" loading="lazy"><div class="play-btn"></div></div><div class="info"><div class="title">${item.snippet.title}</div><div class="channel">${item.snippet.channelTitle}</div></div>`;
+    card.onclick = () => openModal(item.id.videoId);
+  }
   return card;
 }
 
-function buildShortCard(item, index){
-  if(!item.id?.videoId) return null;
-  const videoId = item.id.videoId;
-  const title = item.snippet.title;
-  const channel = item.snippet.channelTitle;
-  const thumb = getThumb(item);
-  const short = document.createElement('div');
-  short.className = 'short';
-  short.dataset.videoId = videoId;
-  short.dataset.index = index;
-  short.innerHTML = `<div class="short-inner"><div class="play-error" style="display:none">Video Play nahi hogi<br><small>Embed Blocked</small></div><div class="thumb" style="position:absolute;inset:0"><img src="${thumb}" alt="${escapeHtml(title)}" style="width:100%;height:100%;object-fit:cover"></div><div class="short-meta"><div class="title">${escapeHtml(title)}</div><div class="channel">${escapeHtml(channel)}</div></div><div class="iframe-container" style="position:absolute;inset:0;z-index:5"></div></div>`;
-  return short;
-}
-
-function escapeHtml(str){return String(str || '').replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]))}
-
 function openModal(videoId){
-  closeModal();
-  modalError.style.display = 'none';
-  const origin = encodeURIComponent(window.location.origin);
-  // 153 FIX: nocookie + origin + widget_referrer
-  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&controls=1&modestbranding=1&playsinline=1&fs=1&origin=${origin}&widget_referrer=${origin}`;
-  setTimeout(()=>{try{if(player.contentWindow.location.href.includes('error')) modalError.style.display='flex'}catch(e){}}, 3000);
+  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
+closeBtn.onclick = ()=>{modal.classList.remove('active');player.src='';document.body.style.overflow='auto'};
 
-function closeModal(){modal.classList.remove('active');player.src = '';modalError.style.display='none';document.body.style.overflow = 'auto'}
-closeBtn.onclick = closeModal;
-modal.onclick = (e)=>{ if(e.target === modal) closeModal() };
-document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeModal() });
-
-function buildUrl(pageToken){
+function buildUrl(token){
   const key = API_KEYS[keyIndex];
-  let url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=12&type=video&q=${encodeURIComponent(currentQuery)}&key=${key}`;
-  if(pageToken) url += `&pageToken=${pageToken}`;
-  return url;
-}
-
-let shortsObserver = null;
-function ensureShortsObserver(){
-  if(shortsObserver) shortsObserver.disconnect();
-  shortsObserver = new IntersectionObserver((entries)=>{
-    entries.forEach(entry=>{
-      const el = entry.target;
-      const container = el.querySelector('.iframe-container');
-      const errorDiv = el.querySelector('.play-error');
-      const idx = parseInt(el.dataset.index);
-      if(entry.isIntersecting && entry.intersectionRatio > 0.6){
-        const vid = el.dataset.videoId;
-        if(container &&!container.querySelector('iframe')){
-          const origin = encodeURIComponent(window.location.origin);
-          const mute = idx === 0? 1 : 0;
-          const ifr = document.createElement('iframe');
-          ifr.allow = 'autoplay; encrypted-media; picture-in-picture; web-share';
-          ifr.allowFullscreen = true;
-          ifr.referrerPolicy = 'no-referrer';
-          // 153 FIX: nocookie + origin + widget_referrer
-          ifr.src = `https://www.youtube-nocookie.com/embed/${vid}?autoplay=1&mute=${mute}&rel=0&controls=1&modestbranding=1&playsinline=1&loop=1&playlist=${vid}&origin=${origin}&widget_referrer=${origin}`;
-          ifr.onload = ()=>{setTimeout(()=>{try{if(ifr.contentWindow.location.href.includes('error')) errorDiv.style.display='flex'}catch(e){}}, 5000)}
-          container.appendChild(ifr);
-          document.querySelectorAll('.short.iframe-container').forEach(c=>{if(c!== container && c.querySelector('iframe')) c.innerHTML = ''});
-        }
-      } else {
-        if(container && container.querySelector('iframe')){container.innerHTML = '';errorDiv.style.display='none'}
-      }
-    });
-  }, {threshold:[0.6]});
-}
-
-function appendItems(items){
-  if(!items ||!items.length) return;
-  if(shortsMode){
-    grid.classList.add('shorts');
-    items.forEach((item, idx)=>{const s = buildShortCard(item, idx);if(s){grid.appendChild(s);ensureShortsObserver();shortsObserver.observe(s)}});
-  }else{
-    grid.classList.remove('shorts');
-    items.forEach(item=>{const c = buildGridCard(item);if(c) grid.appendChild(c)});
-  }
+  return `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=8&type=video&videoEmbeddable=true&q=${encodeURIComponent(currentQuery)}&key=${key}${token?`&pageToken=${token}`:''}`;
 }
 
 async function loadVideos(reset = false){
   if(loading) return;
-  if(reset){
-    if(shortsObserver) shortsObserver.disconnect();
-    primaryPageToken = '';secondaryPageToken = '';primaryExhausted = false;secondaryExhausted = false;keyIndex = 0;
-    grid.innerHTML = '<button class="shorts-back" id="shortsBack">⬅ Back</button>';
-    document.getElementById('shortsBack').onclick = ()=>{shortsBtn.click()}
-  }
-  if(primaryExhausted && secondaryExhausted){loader.style.display = 'none';return}
+  if(reset){ pageToken=''; grid.innerHTML=''; quotaDead=false; quotaBanner.style.display='none'; }
+  
+  const cacheKey = getCacheKey(currentQuery, pageToken);
+  const cached = getFromCache(cacheKey);
+  if(cached){ appendItems(cached.items); pageToken = cached.nextPageToken; loading=false; return; }
 
-  loading = true;loader.style.display = 'block';errorBox.style.display = 'none';
-  loader.textContent = 'Loading...';
-  const pageToken = primaryPageToken || secondaryPageToken;
-  const url = buildUrl(pageToken);
+  if(quotaDead){ loader.style.display='none'; return; }
+  loading=true; loader.style.display='block'; errorBox.style.display='none';
 
   try{
-    const res = await fetch(url);
+    const res = await fetch(buildUrl(pageToken));
     const data = await res.json();
     if(data.error){
-      if(data.error.code === 403 || data.error.code === 400){
-        keyIndex++; if(keyIndex >= API_KEYS.length) keyIndex = 0;
-        if(keyIndex === 0) primaryExhausted = true; else secondaryExhausted = true;
-        throw new Error('API Error: ' + data.error.message);
-      } else {throw new Error(data.error.message)}
+      if(data.error.code === 403){
+        keyIndex = (keyIndex+1) % API_KEYS.length;
+        if(keyIndex===0){ quotaDead=true; quotaBanner.style.display='block'; throw new Error('All Keys Quota Finished'); }
+        return loadVideos(false); // retry with next key
+      }
+      throw new Error(data.error.message);
     }
-    appendItems(data.items || []);
-    if(!primaryPageToken){primaryPageToken = data.nextPageToken || '';if(!primaryPageToken) primaryExhausted = true}
-    else {secondaryPageToken = data.nextPageToken || '';if(!secondaryPageToken) secondaryExhausted = true}
-    loader.style.display = data.nextPageToken? 'block' : 'none';
+    setCache(cacheKey, data);
+    appendItems(data.items);
+    pageToken = data.nextPageToken;
+    loader.style.display = pageToken ? 'block' : 'none';
   }catch(err){
-    console.error(err);
     errorBox.textContent = 'Error: ' + err.message;
     errorBox.style.display = 'block';
-    loader.style.display = 'none';
   }
-  loading = false;
+  loading=false;
 }
 
-let scrollDebounce = null;
-window.addEventListener('scroll',()=>{if(scrollDebounce) return;scrollDebounce = setTimeout(()=>{ scrollDebounce = null;if((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 200){loadVideos()}}, 200)});
+function appendItems(items){
+  items.forEach(item=>{ const c=buildCard(item); if(c) grid.appendChild(c) });
+}
+
+window.addEventListener('scroll',()=>{ 
+  if((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 300){
+    if(!shortsMode) loadVideos()
+  }
+});
 
 document.getElementById('go').onclick = ()=>{currentQuery = searchInput.value.trim() || 'trending';loadVideos(true)}
 searchInput.addEventListener('keydown', e=>{if(e.key === 'Enter') document.getElementById('go').click()});
 
-turboBtn.onclick = ()=>{turboEnabled =!turboEnabled;turboBtn.textContent = turboEnabled? 'Turbo: ON' : 'Turbo: OFF';turboBtn.classList.toggle('active');loadVideos(true)};
-shortsBtn.onclick = ()=>{shortsMode =!shortsMode;shortsBtn.textContent = shortsMode? 'Shorts: ON' : 'Shorts: OFF';shortsBtn.classList.toggle('active');loadVideos(true)};
-shortsBackBtn.onclick = ()=>{shortsBtn.click()}
+turboBtn.onclick = ()=>{turboEnabled =!turboEnabled;turboBtn.textContent = turboEnabled? 'Turbo: ON' : 'Turbo: OFF';turboBtn.classList.toggle('active');updateShortsBtnVisibility();loadVideos(true)};
+shortsBtn.onclick = ()=>{if(!turboEnabled) return; shortsMode =!shortsMode;shortsBtn.textContent = shortsMode? 'Shorts: ON' : 'Shorts: OFF';shortsBtn.classList.toggle('active');loadVideos(true)};
 
+updateShortsBtnVisibility();
 loadVideos();
 </script>
 </body>
