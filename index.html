@@ -131,7 +131,7 @@ function buildCard(item){
   const card = document.createElement('div');
   card.className = shortsMode ? 'short' : 'card';
   if(shortsMode){
-    card.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${item.id.videoId}?autoplay=1&mute=1&loop=1&playlist=${item.id.videoId}" allow="autoplay"></iframe><div class="short-meta"><div class="title">${item.snippet.title}</div><div class="channel">${item.snippet.channelTitle}</div></div>`;
+    card.innerHTML = `<iframe class="short-player" src="https://www.youtube-nocookie.com/embed/${item.id.videoId}?autoplay=1&mute=1&enablejsapi=1&loop=1&playlist=${item.id.videoId}" allow="autoplay"></iframe><div class="short-meta"><div class="title">${item.snippet.title}</div><div class="channel">${item.snippet.channelTitle}</div></div>`;
   } else {
     card.innerHTML = `<div class="thumb"><img src="${thumb}" loading="lazy"><div class="play-btn"></div></div><div class="info"><div class="title">${item.snippet.title}</div><div class="channel">${item.snippet.channelTitle}</div></div>`;
     card.onclick = () => openModal(item.id.videoId);
@@ -203,6 +203,19 @@ shortsBtn.onclick = ()=>{if(!turboEnabled) return; shortsMode =!shortsMode;short
 
 updateShortsBtnVisibility();
 loadVideos();
+
+function muteAllShortsExceptCurrent(){
+ const frames=document.querySelectorAll('.short-player');
+ const mid=window.innerHeight/2;
+ frames.forEach(f=>{
+  const r=f.getBoundingClientRect();
+  const active=r.top<=mid && r.bottom>=mid;
+  f.contentWindow.postMessage('{"event":"command","func":"'+(active?'unMute':'mute')+'","args":""}','https://www.youtube-nocookie.com');
+ });
+}
+window.addEventListener('scroll',()=>{ if(shortsMode) muteAllShortsExceptCurrent();},{passive:true});
+setInterval(()=>{ if(shortsMode) muteAllShortsExceptCurrent();},800);
+
 </script>
 </body>
 </html>
