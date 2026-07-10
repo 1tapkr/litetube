@@ -3,11 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>                             LITETUBE PRO</title>
-
+<title>LITETUBE PRO</title>
 <style>
-
 :root{
 --bg:#070b12;
 --card:#111827;
@@ -16,1062 +13,163 @@
 --white:#fff;
 --muted:#94a3b8;
 }
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:system-ui,Arial,sans-serif;
-}
-
-body{
-background:var(--bg);
-color:var(--white);
-}
-
-
-/* BHATI INTRO */
-
-#bhatiIntro{
-
-position:fixed;
-inset:0;
-
-display:flex;
-justify-content:center;
-align-items:center;
-
-background:#070b12;
-
-font-size:65px;
-font-weight:900;
-letter-spacing:18px;
-
-color:var(--blue);
-
-z-index:9999;
-
-animation:hideIntro 1.4s forwards;
-
-}
-
-
-#bhatiIntro span{
-
-opacity:0;
-
-display:inline-block;
-
-transform:translateY(20px);
-
-animation:
-showLetter .15s forwards;
-
-}
-
-
-@keyframes showLetter{
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
-}
-
-
-@keyframes hideIntro{
-
-0%,80%{
-opacity:1;
-}
-
-100%{
-opacity:0;
-visibility:hidden;
-}
-
-}
-
-
-
-
-/* HEADER */
-
-.header{
-
-height:65px;
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-right:0;
-
-display:flex;
-
-align-items:center;
-
-gap:10px;
-
-padding:0 18px;
-
-background:rgba(7,11,12,.9);
-
-backdrop-filter:blur(10px);
-
-border-bottom:1px solid #1e293b;
-
-z-index:10;
-
-}
-
-
-.logo{
-
-font-size:25px;
-
-font-weight:900;
-
-letter-spacing:2px;
-
-background:linear-gradient(
-90deg,
-var(--blue),
-var(--purple)
-);
-
--webkit-background-clip:text;
-
-color:transparent;
-
-}
-
-
-
-.search{
-
-flex:1;
-
-display:flex;
-
-max-width:600px;
-
-background:#111827;
-
-border:1px solid #243044;
-
-border-radius:12px;
-
-overflow:hidden;
-
-}
-
-
-.search input{
-
-flex:1;
-
-padding:12px;
-
-background:none;
-
-border:0;
-
-outline:none;
-
-color:white;
-
-}
-
-
-.search button{
-
-width:50px;
-
-border:0;
-
-background:var(--blue);
-
-cursor:pointer;
-
-}
-
-
-
-
-
-/* ACTIONS */
-
-.actions{
-
-display:flex;
-
-align-items:center;
-
-gap:7px;
-
-}
-
-
-.actions button,
-.quota{
-
-background:#111827;
-
-color:white;
-
-border:1px solid #243044;
-
-padding:8px 10px;
-
-border-radius:10px;
-
-font-size:12px;
-
-cursor:pointer;
-
-}
-
-
-.quota{
-
-color:#22c55e;
-
-}
-
-
-
-
-
-/* MAIN */
-
-.main{
-
-padding:90px 25px 30px;
-
-}
-
-
-
-.grid{
-
-display:grid;
-
-grid-template-columns:
-
-repeat(auto-fill,minmax(250px,1fr));
-
-gap:18px;
-
-}
-
-
-
-.card{
-
-background:var(--card);
-
-border-radius:15px;
-
-overflow:hidden;
-
-border:1px solid #1e293b;
-
-cursor:pointer;
-
-}
-
-
-.thumb{
-
-height:145px;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-background:linear-gradient(
-135deg,
-#172554,
-#020617
-);
-
-font-size:40px;
-
-color:var(--blue);
-
-}
-
-
-.info{
-
-padding:12px;
-
-}
-
-
-.title{
-
-font-weight:700;
-
-font-size:14px;
-
-}
-
-
-.channel{
-
-color:var(--muted);
-
-font-size:12px;
-
-margin-top:5px;
-
-}
-
-
-
-@media(max-width:700px){
-
-.actions button{
-
-font-size:10px;
-
-padding:7px;
-
-}
-
-
-.logo{
-
-font-size:18px;
-
-}
-
-}
-
-
+*{margin:0;padding:0;box-sizing:border-box;font-family:system-ui,Arial,sans-serif;}
+body{background:var(--bg);color:var(--white);}
+#bhatiIntro{position:fixed;inset:0;display:flex;justify-content:center;align-items:center;background:#070b12;font-size:65px;font-weight:900;letter-spacing:18px;color:var(--blue);z-index:9999;animation:hideIntro 1.4s forwards;}
+@keyframes hideIntro{0%,80%{opacity:1;}100%{opacity:0;visibility:hidden;}}
+.header{height:65px;position:fixed;top:0;left:0;right:0;display:flex;align-items:center;gap:10px;padding:0 18px;background:rgba(7,11,12,.9);backdrop-filter:blur(10px);border-bottom:1px solid #1e293b;z-index:10;}
+.logo{font-size:25px;font-weight:900;letter-spacing:2px;background:linear-gradient(90deg,var(--blue),var(--purple));-webkit-background-clip:text;color:transparent;}
+.search{flex:1;display:flex;max-width:600px;background:#111827;border:1px solid #243044;border-radius:12px;overflow:hidden;}
+.search input{flex:1;padding:12px;background:none;border:0;outline:none;color:white;}
+.search button{width:50px;border:0;background:var(--blue);cursor:pointer;}
+.actions{display:flex;align-items:center;gap:7px;}
+.actions button{background:#111827;color:white;border:1px solid #243044;padding:8px 10px;border-radius:10px;font-size:12px;cursor:pointer;}
+.actions button.active{background:var(--blue);color:#000;border-color:var(--blue);}
+.main{padding:90px 25px 30px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px;}
+.card{background:var(--card);border-radius:15px;overflow:hidden;border:1px solid #1e293b;cursor:pointer;}
+.thumb{height:145px;background:#000;}
+.thumb img{width:100%;height:100%;object-fit:cover;}
+.info{padding:12px;}
+.title{font-weight:700;font-size:14px;}
+.channel{color:var(--muted);font-size:12px;margin-top:5px;}
+.loading{text-align:center;padding:20px;color:var(--muted);font-size:14px;}
 </style>
-
 </head>
-
 <body>
-
-
-<div id="bhatiIntro">
-BHATI
-</div>
-
-
-
+<div id="bhatiIntro">BHATI</div>
 <header class="header">
-
-
-<div class="logo">
-
-</div>
-
-
-
+<div class="logo">LITETUBE</div>
 <div class="search">
-
-<input id="searchInput"
-placeholder="Search videos...">
-
-
-<button id="searchBtn">
-🔍
-</button>
-
+<input id="searchInput" placeholder="Search videos...">
+<button id="searchBtn">🔍</button>
 </div>
-
-
-
 <div class="actions">
-
-
-<button id="videoBtn">
-🎬 Videos
-</button>
-
-
-<button id="shortBtn">
-🎞 Shorts
-</button>
-
-
-<button id="saveBtn">
-💾 Saver
-</button>
-
+<button id="videoBtn">🎬 Videos</button>
+<button id="shortBtn">🎞 Shorts</button>
+<button id="saveBtn">💾 Data Saver</button>
 </div>
-
-
 </header>
-
-
-
 <main class="main">
-
-
-<div class="grid" id="grid">
-
-
-<div class="card">
-
-<div class="thumb">
-▶
-</div>
-
-<div class="info">
-
-<div class="title">
-Loading...
-</div>
-
-<div class="channel">
-BHATI
-</div>
-
-</div>
-
-</div>
-
-
-</div>
-
-
+<div class="grid" id="grid"></div>
+<div id="loadingIndicator" class="loading" style="display:none;">Loading...</div>
 </main>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-
-const API_KEYS=[
-"AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw",
-"AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4"
-];
-
-
+const API_KEYS=["AIzaSyC9OPfYIz6sX9KaWyUnF59dzFp_Uya6JXw","AIzaSyAM53NgSNnew8hTJ53cDtLg0rxIoo75aN4"];
 let keyIndex=0;
 let query="trending videos";
 let nextToken="";
 let loading=false;
-let dataSaver=true;
-
-
+let dataSaver=false; // default off
+let shortsMode=false;
+let shortsPlayers={};
+let currentPlayingShort=null;
+let loadRequestId=0;
+let shortsObserver=null;
 const grid=document.getElementById("grid");
 const input=document.getElementById("searchInput");
 const searchBtn=document.getElementById("searchBtn");
 const saveBtn=document.getElementById("saveBtn");
-const quota={innerHTML:""};
+const videoBtn=document.getElementById("videoBtn");
+const shortBtn=document.getElementById("shortBtn");
+const loadingIndicator=document.getElementById("loadingIndicator");
 
+function saveCache(key,data){try{localStorage.setItem(key,JSON.stringify({time:Date.now(),data:data}));}catch(e){}}
+function getCache(key){try{let x=JSON.parse(localStorage.getItem(key));if(!x)return null;if(Date.now()-x.time>1200000){localStorage.removeItem(key);return null;}return x.data;}catch(e){return null;}}
 
-
-/* CACHE */
-
-function saveCache(key,data){
-
-try{
-
-localStorage.setItem(
-key,
-JSON.stringify({
-time:Date.now(),
-data:data
-})
-);
-
-}catch(e){}
-
+/* 1. DATA SAVER ON HAI TO KAM VIDEO LOAD HOGA */
+function makeURL(isShorts=false){
+let limit=dataSaver?6:12; // Saver ON = 6 videos, OFF = 12 videos
+let q=isShorts?"shorts":query;
+return "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults="+limit+"&q="+encodeURIComponent(q)+"&key="+API_KEYS[keyIndex]+(nextToken?"&pageToken="+nextToken:"");
 }
 
-
-function getCache(key){
-
-try{
-
-let x=JSON.parse(
-localStorage.getItem(key)
-);
-
-if(!x)return null;
-
-
-if(Date.now()-x.time>1200000){
-
-localStorage.removeItem(key);
-
-return null;
-
+async function fetchWithKeyRotation(url){
+let attempts=0;let lastError=null;
+while(attempts<API_KEYS.length){
+try{let res=await fetch(url);let data=await res.json();if(data.error){if(data.error.code===403||data.error.code===400){keyIndex=(keyIndex+1)%API_KEYS.length;url=url.replace(/key=[^&]*/, "key="+API_KEYS[keyIndex]);attempts++;continue;}throw new Error(data.error.message||"API Error");}return data;}
+catch(e){lastError=e;keyIndex=(keyIndex+1)%API_KEYS.length;url=url.replace(/key=[^&]*/, "key="+API_KEYS[keyIndex]);attempts++;}}
+throw lastError||new Error("All API keys failed");
 }
 
-return x.data;
-
-
-}catch(e){
-
-return null;
-
+/* 2. DATA SAVER ON HAI TO CHOTA THUMBNAIL */
+function getThumbUrl(snippet,id){
+let thumbs=snippet.thumbnails||{};
+let url=dataSaver? thumbs.medium?.url : thumbs.high?.url; // Saver ON = medium, OFF = high
+return url||`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 }
-
-}
-
-
-
-
-/* API */
-
-function makeURL(){
-
-let limit=dataSaver?6:10;
-
-
-return "https://www.googleapis.com/youtube/v3/search"
-+
-"?part=snippet"
-+
-"&type=video"
-+
-"&maxResults="+limit
-+
-"&q="+encodeURIComponent(query)
-+
-"&key="+API_KEYS[keyIndex]
-+
-(nextToken?
-"&pageToken="+nextToken:"");
-
-}
-
-
-
-
-/* CARD */
 
 function createCard(item){
-
 let id=item.id.videoId;
-
 let title=item.snippet.title;
-
 let channel=item.snippet.channelTitle;
-
-let image=(item.snippet?.thumbnails?.high?.url||
-item.snippet?.thumbnails?.medium?.url||
-item.snippet?.thumbnails?.default?.url||
-`https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
-
-
+let image=getThumbUrl(item.snippet,id);
 let div=document.createElement("div");
-
 div.className="card";
-
-
-div.innerHTML=`
-
-<div class="thumb">
-
-${
-dataSaver
-?
-"▶"
-:
-`<img loading="lazy" src="${image}" onerror="this.src=`https://i.ytimg.com/vi/${id}/hqdefault.jpg`" style="width:100%;height:100%;object-fit:cover">`
-}
-
-</div>
-
-
-<div class="info">
-
-<div class="title">
-${title}
-</div>
-
-
-<div class="channel">
-${channel}
-</div>
-
-
-</div>
-
-`;
-
-
+div.innerHTML=`<div class="thumb"><img loading="lazy" src="${image}" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/${id}/mqdefault.jpg'" alt=""></div><div class="info"><div class="title">${title}</div><div class="channel">${channel}</div></div>`;
 div.onclick=()=>openPlayer(id);
-
-
 return div;
-
 }
 
-
-
-
-/* PLAYER */
-
+/* 3. YOUTUBE.COM USE KIYA - ERROR 153 FIX + AUTOPLAY BAND IN SAVER */
 function openPlayer(id){
-
 let box=document.createElement("div");
-
-
-box.style.position="fixed";
-box.style.inset="0";
-box.style.background="rgba(0,0,0,.9)";
-box.style.zIndex="999";
-
-
-box.innerHTML=`
-
-<iframe
-
-src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1"
-
-style="
-width:90%;
-height:70%;
-margin:8% 5%;
-border:0;
-"
-
-allowfullscreen>
-
-</iframe>
-
-`;
-
-
-box.onclick=()=>box.remove();
-
-
+box.style.position="fixed";box.style.inset="0";box.style.background="rgba(0,0,0,.9)";box.style.zIndex="999";
+let autoplay=dataSaver?0:1; // Saver ON = autoplay band
+box.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=${autoplay}&rel=0" style="width:90%;height:70%;margin:8% 5%;border:0;" allowfullscreen allow="autoplay"></iframe><div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer" onclick="this.parentElement.remove()">✖</div>`;
 document.body.appendChild(box);
-
 }
-
-
-
-
-
-/* LOAD VIDEOS */
 
 async function loadVideos(clear=true){
-
-
-if(loading)return;
-
-
-loading=true;
-
-
-if(clear){
-
-grid.innerHTML="";
-
-nextToken="";
-
-}
-
-
-
-let cacheKey=
-"bhati_"+query+"_"+dataSaver;
-
-
+if(loading)return;loading=true;loadRequestId++;const currentRequest=loadRequestId;loadingIndicator.style.display="block";
+if(clear){grid.innerHTML="";nextToken="";}
+let cacheKey="bhati_"+query+"_"+dataSaver+"_"+(nextToken||"first");
 let old=getCache(cacheKey);
-
-
-
-if(old){
-
-showVideos(old.items);
-
-nextToken=
-old.nextPageToken||"";
-
-loading=false;
-
-return;
-
+if(old){if(currentRequest!==loadRequestId){loading=false;loadingIndicator.style.display="none";return;}showVideos(old.items);nextToken=old.nextPageToken||"";loading=false;loadingIndicator.style.display="none";return;}
+try{let res=await fetchWithKeyRotation(makeURL(false));if(currentRequest!==loadRequestId){loading=false;loadingIndicator.style.display="none";return;}saveCache(cacheKey,res);showVideos(res.items);nextToken=res.nextPageToken||"";}
+catch(e){console.log(e);}
+loading=false;loadingIndicator.style.display="none";
 }
+function showVideos(items){if(!items)return;items.forEach(item=>{if(item.id&&item.id.videoId){grid.appendChild(createCard(item));}});}
 
+searchBtn.onclick=()=>{query=input.value.trim()||"trending videos";loadVideos(true);};
+input.onkeydown=e=>{if(e.key==="Enter") searchBtn.click();};
 
-
-try{
-
-
-let res=await fetch(makeURL());
-
-let data=await res.json();
-
-
-
-if(data.error){
-
-
-if(!window.quotaPopup){
-
-alert(
-"API quota limit reached."
-);
-
-window.quotaPopup=true;
-
-}
-
-
-quota.innerHTML=
-"API: LIMIT";
-
-
-loading=false;
-
-return;
-
-}
-
-
-
-saveCache(cacheKey,data);
-
-
-showVideos(data.items);
-
-
-nextToken=
-data.nextPageToken||"";
-
-
-quota.innerHTML=
-"API: OK";
-
-
-
-}catch(e){
-
-console.log(e);
-
-}
-
-
-loading=false;
-
-}
-
-
-
-
-function showVideos(items){
-
-if(!items)return;
-
-
-items.forEach(item=>{
-
-grid.appendChild(
-createCard(item)
-);
-
-});
-
-}
-
-
-
-
-
-/* SEARCH */
-
-searchBtn.onclick=()=>{
-
-query=
-input.value.trim()
-||
-"trending videos";
-
-
-loadVideos(true);
-
-};
-
-
-
-input.onkeydown=e=>{
-
-if(e.key==="Enter")
-searchBtn.click();
-
-};
-
-
-
-
-
-/* DATA SAVER */
-
+/* DATA SAVER BUTTON */
 saveBtn.onclick=()=>{
-
-
 dataSaver=!dataSaver;
-
-
-saveBtn.innerHTML=
-dataSaver
-?
-"💾 Saver"
-:
-"📶 Data";
-
-
-loadVideos(true);
-
+saveBtn.classList.toggle("active");
+saveBtn.innerHTML=dataSaver?"💾 Saver ON":"💾 Data Saver";
+loadVideos(true); // turant reload
 };
 
+/* SHORTS */
+shortBtn.onclick=()=>{shortsMode=true;loadShorts();};
+videoBtn.onclick=()=>{shortsMode=false;if(shortsObserver)shortsObserver.disconnect();Object.values(shortsPlayers).forEach(p=>{try{p.pauseVideo();}catch(e){}});shortsPlayers={};currentPlayingShort=null;grid.style.display="grid";loadVideos(true);};
 
-
-
-loadVideos(true);
-
-
-</script>
-<script>
-
-
-/* =====================
-      SHORTS MODE
-===================== */
-
-
-let shortsMode=false;
-
-
-const shortBtn=
-document.getElementById("shortBtn");
-
-
-const videoBtn=
-document.getElementById("videoBtn");
-
-
-
-shortBtn.onclick=()=>{
-
-shortsMode=true;
-
-loadShorts();
-
-};
-
-
-
-videoBtn.onclick=()=>{
-
-shortsMode=false;
-
-grid.style.display="grid";
-
-loadVideos(true);
-
-};
-
-
-
-
-
+function onYouTubeIframeAPIReady(){}
 async function loadShorts(){
-
-
-grid.innerHTML="";
-
-
-grid.style.display="flex";
-
-grid.style.flexDirection="column";
-
-grid.style.alignItems="center";
-
-
-
-let url=
-
-"https://www.googleapis.com/youtube/v3/search"
-
-+
-
-"?part=snippet"
-
-+
-
-"&type=video"
-
-+
-
-"&maxResults=8"
-
-+
-
-"&q=shorts"
-
-+
-
-"&key="+API_KEYS[keyIndex];
-
-
-
-try{
-
-
-let res=await fetch(url);
-
-let data=await res.json();
-
-
-
-data.items.forEach(item=>{
-
-
-let id=item.id.videoId;
-
-
-
-let box=document.createElement("div");
-
-
-box.style.width="350px";
-
-box.style.height="620px";
-
-box.style.background="#000";
-
-box.style.borderRadius="18px";
-
-box.style.overflow="hidden";
-
-box.style.marginBottom="20px";
-
-
-
-box.innerHTML=`
-
-<iframe
-
-src="https://www.youtube-nocookie.com/embed/${id}"
-
-style="
-width:100%;
-height:100%;
-border:0;
-"
-
-allowfullscreen>
-
-</iframe>
-
-`;
-
-
-
+grid.innerHTML="";grid.style.display="flex";grid.style.flexDirection="column";grid.style.alignItems="center";loadingIndicator.style.display="block";nextToken="";
+let url="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=shorts&key="+API_KEYS[keyIndex];
+try{let res=await fetchWithKeyRotation(url);loadingIndicator.style.display="none";
+res.items.forEach(item=>{
+let id=item.id.videoId;let box=document.createElement("div");box.className="short-wrapper";
+box.style.width="350px";box.style.height="620px";box.style.background="#000";box.style.borderRadius="18px";box.style.overflow="hidden";box.style.marginBottom="20px";
+let iframeId="short_iframe_"+id;
+box.innerHTML=`<iframe id="${iframeId}" data-videoid="${id}" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&autoplay=0&controls=0" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 grid.appendChild(box);
-
-
-
 });
-
-
-}catch(e){
-
-console.log(e);
-
+setTimeout(initShortsPlayers,1000);}catch(e){console.log(e);loadingIndicator.style.display="none";}
 }
+function initShortsPlayers(){grid.querySelectorAll("iframe[id^='short_iframe_']").forEach(iframe=>{let id=iframe.dataset.videoid;if(!shortsPlayers[id]){shortsPlayers[id]=new YT.Player(iframe.id,{events:{'onReady':()=>{}}});}});setupShortsObserver();}
+function setupShortsObserver(){if(shortsObserver)shortsObserver.disconnect();shortsObserver=new IntersectionObserver((entries)=>{entries.forEach(entry=>{let iframe=entry.target.querySelector("iframe");if(!iframe)return;let id=iframe.dataset.videoid;let player=shortsPlayers[id];if(!player)return;if(entry.isIntersecting&&entry.intersectionRatio>=0.7){if(currentPlayingShort&&currentPlayingShort!==id){try{shortsPlayers[currentPlayingShort].pauseVideo();}catch(e){}}try{player.playVideo();}catch(e){}currentPlayingShort=id;}else{try{player.pauseVideo();}catch(e){}if(currentPlayingShort===id)currentPlayingShort=null;}});},{threshold:[0.7],rootMargin:"0px"});grid.querySelectorAll(".short-wrapper").forEach(box=>{shortsObserver.observe(box);});}
 
+let infiniteLoading=false;
+window.addEventListener("scroll",()=>{if(shortsMode)return;if(window.innerHeight+window.scrollY>=document.body.offsetHeight-500){if(nextToken&&!infiniteLoading&&!loading){infiniteLoading=true;loadVideos(false).finally(()=>{infiniteLoading=false;});}}});
 
-}
-
-
-
-
-
-/* =====================
-      INFINITE LOAD
-===================== */
-
-
-window.addEventListener(
-"scroll",
-()=>{
-
-
-if(shortsMode)return;
-
-
-
-if(
-
-window.innerHeight+
-window.scrollY
->=
-document.body.offsetHeight-400
-
-){
-
-
-if(nextToken)
-
-loadVideos(false);
-
-
-}
-
-
-});
-
-
-
-
-
-/* =====================
-    NETWORK SAVER
-===================== */
-
-
-if(navigator.connection){
-
-
-let speed=
-navigator.connection.effectiveType;
-
-
-
-if(
-speed==="2g" ||
-speed==="slow-2g"
-){
-
-dataSaver=true;
-
-saveBtn.innerHTML="💾 Saver";
-
-}
-
-
-}
-
-
-
-
-
-console.log(
-"BHATI LITETUBE PRO READY 🚀"
-);
-
-
-
+loadVideos(true); // pehli baar load
+console.log("BHATI LITETUBE PRO READY 🚀 Data Saver Ready");
 </script>
-
-
 </body>
 </html>
-
