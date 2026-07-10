@@ -15,7 +15,7 @@ body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Roboto,sans-s
 .bhati-letter{background:linear-gradient(135deg, #FFD700, var(--neon), var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;opacity:0;animation:letterPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;filter:drop-shadow(0 0 15px rgba(0, 242, 254, 0.4))}
 @keyframes letterPop{0%{opacity:0;transform:scale(0)}100%{opacity:1;transform:scale(1)}}
 header{position:sticky;top:0;z-index:20;background:rgba(5,10,24,0.85);backdrop-filter:blur(12px);padding:12px 16px;display:flex;gap:12px;align-items:center;justify-content:center;border-bottom:1px solid rgba(0,242,254,0.08)}
-.search-wrap{width:100%;max-width:640px;display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:8px}
+.search-wrap{box-shadow:0 0 20px rgba(0,242,254,.12);width:100%;max-width:640px;display:flex;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);border-radius:999px;padding:8px}
 .search-wrap input{flex:1;background:transparent;border:0;outline:0;color:var(--text);font-size:16px;padding:0 12px}
 .search-wrap button{width:44px;height:44px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--neon),var(--neon2));color:#000;font-size:18px;cursor:pointer}
 .header-controls{display:flex;gap:8px;align-items:center}
@@ -30,8 +30,8 @@ main{padding:18px 12px 80px}
 .short{width:100%;height:100vh;scroll-snap-align:start;background:#000;position:relative}
 .short iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 .short-meta{position:absolute;bottom:0;left:0;right:0;z-index:10;padding:24px 18px 80px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.8))}
-.card{background:var(--card);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:0.28s}
-.card:hover{transform:translateY(-6px);border-color:var(--neon)}
+.card{background:linear-gradient(180deg,#111b34,#0F172A);box-shadow:0 10px 25px rgba(0,242,254,.08);border:1px solid rgba(255,255,255,0.04);border-radius:14px;overflow:hidden;cursor:pointer;transition:0.28s}
+.card:hover{transform:translateY(-8px) scale(1.02);border-color:var(--neon);box-shadow:0 18px 35px rgba(0,242,254,.18)}
 .thumb{position:relative;width:100%;aspect-ratio:16/9;background:#000}
 .thumb img{width:100%;height:100%;object-fit:cover}
 .play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:56px;height:56px;background:rgba(0,242,254,0.86);border-radius:50%;display:grid;place-items:center;opacity:0;transition:0.22s}
@@ -68,7 +68,7 @@ main{padding:18px 12px 80px}
 <div id="modal" class="modal">
   <div class="modal-content">
     <button class="close" id="close">⬅ Back</button>
-    <iframe id="player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen referrerpolicy="no-referrer"></iframe>
+    <iframe id="player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
   </div>
 </div>
 
@@ -140,7 +140,8 @@ function buildCard(item){
 }
 
 function openModal(videoId){
-  player.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1`;
+  const params=new URLSearchParams({autoplay:1,rel:0,modestbranding:1,playsinline:1,enablejsapi:1,origin:window.location.origin});
+  player.src=`https://www.youtube-nocookie.com/embed/${videoId}?${params.toString()}`;
   modal.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
