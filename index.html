@@ -466,7 +466,7 @@ const grid=document.getElementById("grid");
 const input=document.getElementById("searchInput");
 const searchBtn=document.getElementById("searchBtn");
 const saveBtn=document.getElementById("saveBtn");
-const quota=document.getElementById("quota");
+const quota={innerHTML:""};
 
 
 
@@ -559,7 +559,10 @@ let title=item.snippet.title;
 
 let channel=item.snippet.channelTitle;
 
-let image=item.snippet.thumbnails.medium.url;
+let image=(item.snippet?.thumbnails?.high?.url||
+item.snippet?.thumbnails?.medium?.url||
+item.snippet?.thumbnails?.default?.url||
+`https://i.ytimg.com/vi/${id}/hqdefault.jpg`);
 
 
 let div=document.createElement("div");
@@ -576,7 +579,7 @@ dataSaver
 ?
 "▶"
 :
-`<img src="${image}" style="width:100%;height:100%;object-fit:cover">`
+`<img loading="lazy" src="${image}" onerror="this.src=`https://i.ytimg.com/vi/${id}/hqdefault.jpg`" style="width:100%;height:100%;object-fit:cover">`
 }
 
 </div>
