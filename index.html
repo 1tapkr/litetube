@@ -32,6 +32,7 @@ body{background:var(--bg);color:var(--white);}
 .title{font-weight:700;font-size:14px;}
 .channel{color:var(--muted);font-size:12px;margin-top:5px;}
 .loading{text-align:center;padding:20px;color:var(--muted);font-size:14px;}
+.short-wrapper{width:350px;height:620px;background:#000;border-radius:18px;overflow:hidden;margin-bottom:20px;}
 </style>
 </head>
 <body>
@@ -59,7 +60,7 @@ let keyIndex=0;
 let query="trending videos";
 let nextToken="";
 let loading=false;
-let dataSaver=false; // default off
+let dataSaver=false;
 let shortsMode=false;
 let shortsPlayers={};
 let currentPlayingShort=null;
@@ -76,10 +77,9 @@ const loadingIndicator=document.getElementById("loadingIndicator");
 function saveCache(key,data){try{localStorage.setItem(key,JSON.stringify({time:Date.now(),data:data}));}catch(e){}}
 function getCache(key){try{let x=JSON.parse(localStorage.getItem(key));if(!x)return null;if(Date.now()-x.time>1200000){localStorage.removeItem(key);return null;}return x.data;}catch(e){return null;}}
 
-/* 1. DATA SAVER ON HAI TO KAM VIDEO LOAD HOGA */
 function makeURL(isShorts=false){
-let limit=dataSaver?6:12; // Saver ON = 6 videos, OFF = 12 videos
-let q=isShorts?query+" shorts":query; // FIX 1: अब सर्च वाला query use होगा + shorts
+let limit=dataSaver?6:12;
+let q=isShorts? query + " shorts" : query; // FIX 1: अब सर्च वाला query use होगा
 return "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults="+limit+"&q="+encodeURIComponent(q)+"&key="+API_KEYS[keyIndex]+(nextToken?"&pageToken="+nextToken:"");
 }
 
@@ -91,10 +91,9 @@ catch(e){lastError=e;keyIndex=(keyIndex+1)%API_KEYS.length;url=url.replace(/key=
 throw lastError||new Error("All API keys failed");
 }
 
-/* 2. DATA SAVER ON HAI TO CHOTA THUMBNAIL */
 function getThumbUrl(snippet,id){
 let thumbs=snippet.thumbnails||{};
-let url=dataSaver? thumbs.medium?.url : thumbs.high?.url; // Saver ON = medium, OFF = high
+let url=dataSaver? thumbs.medium?.url : thumbs.high?.url;
 return url||`https://i.ytimg.com/vi/${id}/mqdefault.jpg`;
 }
 
@@ -110,11 +109,10 @@ div.onclick=()=>openPlayer(id);
 return div;
 }
 
-/* 3. YOUTUBE.COM USE KIYA - ERROR 153 FIX + AUTOPLAY BAND IN SAVER */
 function openPlayer(id){
 let box=document.createElement("div");
 box.style.position="fixed";box.style.inset="0";box.style.background="rgba(0,0,0,.9)";box.style.zIndex="999";
-let autoplay=dataSaver?0:1; // Saver ON = autoplay band
+let autoplay=dataSaver?0:1;
 box.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=${autoplay}&rel=0&origin=${window.location.origin}" style="width:90%;height:70%;margin:8% 5%;border:0;" allowfullscreen allow="autoplay"></iframe><div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer" onclick="this.parentElement.remove()">✖</div>`;
 document.body.appendChild(box);
 }
@@ -133,11 +131,10 @@ function showVideos(items){if(!items)return;items.forEach(item=>{if(item.id&&ite
 
 searchBtn.onclick=()=>{
 query=input.value.trim()||"trending videos";
-if(shortsMode){loadShorts(true);}else{loadVideos(true);}
+if(shortsMode){loadShorts(true);}else{loadVideos(true);} // FIX 2: सर्च पे mode check
 };
 input.onkeydown=e=>{if(e.key==="Enter") searchBtn.click();};
 
-/* DATA SAVER BUTTON */
 saveBtn.onclick=()=>{
 dataSaver=!dataSaver;
 saveBtn.classList.toggle("active");
@@ -145,22 +142,20 @@ saveBtn.innerHTML=dataSaver?"💾 Saver ON":"💾 Data Saver";
 if(shortsMode){loadShorts(true);}else{loadVideos(true);}
 };
 
-/* SHORTS */
 shortBtn.onclick=()=>{shortsMode=true;videoBtn.classList.remove("active");shortBtn.classList.add("active");loadShorts(true);};
 videoBtn.onclick=()=>{shortsMode=false;videoBtn.classList.add("active");shortBtn.classList.remove("active");if(shortsObserver)shortsObserver.disconnect();Object.values(shortsPlayers).forEach(p=>{try{p.pauseVideo();}catch(e){}});shortsPlayers={};currentPlayingShort=null;grid.style.display="grid";loadVideos(true);};
 
 function onYouTubeIframeAPIReady(){}
 
-async function loadShorts(clear=true){ // FIX 2: अब clear और nextToken support
+async function loadShorts(clear=true){ // FIX 3: अब nextToken + infinite
 if(loading)return;loading=true;loadingIndicator.style.display="block";
 if(clear){grid.innerHTML="";grid.style.display="flex";grid.style.flexDirection="column";grid.style.alignItems="center";nextToken="";Object.values(shortsPlayers).forEach(p=>{try{p.destroy();}catch(e){}});shortsPlayers={};currentPlayingShort=null;}
 
-let url="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q="+encodeURIComponent(query+" shorts")+"&key="+API_KEYS[keyIndex]+(nextToken?"&pageToken="+nextToken:"");
+let url=makeURL(true); // अब यही use होगा, query + shorts
 try{let res=await fetchWithKeyRotation(url);loadingIndicator.style.display="none";
 res.items.forEach(item=>{
 let id=item.id.videoId;let box=document.createElement("div");box.className="short-wrapper";
-box.style.width="350px";box.style.height="620px";box.style.background="#000";box.style.borderRadius="18px";box.style.overflow="hidden";box.style.marginBottom="20px";
-let iframeId="short_iframe_"+id+"_"+Date.now()+Math.random();
+let iframeId="short_iframe_"+id+"_"+Math.random();
 box.innerHTML=`<iframe id="${iframeId}" data-videoid="${id}" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&autoplay=0&controls=0&origin=${window.location.origin}" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 grid.appendChild(box);
 });
@@ -177,12 +172,11 @@ window.addEventListener("scroll",()=>{
 if(window.innerHeight+window.scrollY>=document.body.offsetHeight-500){
 if(!infiniteLoading&&!loading&&nextToken){
 infiniteLoading=true;
-if(shortsMode){loadShorts(false).finally(()=>{infiniteLoading=false;});} // FIX 3: Shorts में भी infinite
+if(shortsMode){loadShorts(false).finally(()=>{infiniteLoading=false;});} // Shorts में भी infinite
 else{loadVideos(false).finally(()=>{infiniteLoading=false;});}
-}
-}});
+}}});
 
-loadVideos(true); // pehli baar load
+loadVideos(true);
 console.log("BHATI LITETUBE PRO READY 🚀 Data Saver Ready");
 </script>
 </body>
