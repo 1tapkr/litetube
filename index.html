@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--white);}
 <button id="searchBtn">🔍</button>
 </div>
 <div class="actions">
-<button id="videoBtn">🎬 Videos</button>
+<button id="videoBtn" class="active">🎬 Videos</button>
 <button id="shortBtn">🎞 Shorts</button>
 <button id="saveBtn">💾 Data Saver</button>
 </div>
@@ -79,7 +79,7 @@ function getCache(key){try{let x=JSON.parse(localStorage.getItem(key));if(!x)ret
 /* 1. DATA SAVER ON HAI TO KAM VIDEO LOAD HOGA */
 function makeURL(isShorts=false){
 let limit=dataSaver?6:12; // Saver ON = 6 videos, OFF = 12 videos
-let q=isShorts?"shorts":query;
+let q=isShorts?query+" shorts":query; // FIX 1: अब सर्च वाला query use होगा + shorts
 return "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults="+limit+"&q="+encodeURIComponent(q)+"&key="+API_KEYS[keyIndex]+(nextToken?"&pageToken="+nextToken:"");
 }
 
@@ -115,7 +115,7 @@ function openPlayer(id){
 let box=document.createElement("div");
 box.style.position="fixed";box.style.inset="0";box.style.background="rgba(0,0,0,.9)";box.style.zIndex="999";
 let autoplay=dataSaver?0:1; // Saver ON = autoplay band
-box.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=${autoplay}&rel=0" style="width:90%;height:70%;margin:8% 5%;border:0;" allowfullscreen allow="autoplay"></iframe><div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer" onclick="this.parentElement.remove()">✖</div>`;
+box.innerHTML=`<iframe src="https://www.youtube.com/embed/${id}?autoplay=${autoplay}&rel=0&origin=${window.location.origin}" style="width:90%;height:70%;margin:8% 5%;border:0;" allowfullscreen allow="autoplay"></iframe><div style="position:absolute;top:20px;right:30px;color:white;font-size:30px;cursor:pointer" onclick="this.parentElement.remove()">✖</div>`;
 document.body.appendChild(box);
 }
 
@@ -131,7 +131,10 @@ loading=false;loadingIndicator.style.display="none";
 }
 function showVideos(items){if(!items)return;items.forEach(item=>{if(item.id&&item.id.videoId){grid.appendChild(createCard(item));}});}
 
-searchBtn.onclick=()=>{query=input.value.trim()||"trending videos";loadVideos(true);};
+searchBtn.onclick=()=>{
+query=input.value.trim()||"trending videos";
+if(shortsMode){loadShorts(true);}else{loadVideos(true);}
+};
 input.onkeydown=e=>{if(e.key==="Enter") searchBtn.click();};
 
 /* DATA SAVER BUTTON */
@@ -139,32 +142,45 @@ saveBtn.onclick=()=>{
 dataSaver=!dataSaver;
 saveBtn.classList.toggle("active");
 saveBtn.innerHTML=dataSaver?"💾 Saver ON":"💾 Data Saver";
-loadVideos(true); // turant reload
+if(shortsMode){loadShorts(true);}else{loadVideos(true);}
 };
 
 /* SHORTS */
-shortBtn.onclick=()=>{shortsMode=true;loadShorts();};
-videoBtn.onclick=()=>{shortsMode=false;if(shortsObserver)shortsObserver.disconnect();Object.values(shortsPlayers).forEach(p=>{try{p.pauseVideo();}catch(e){}});shortsPlayers={};currentPlayingShort=null;grid.style.display="grid";loadVideos(true);};
+shortBtn.onclick=()=>{shortsMode=true;videoBtn.classList.remove("active");shortBtn.classList.add("active");loadShorts(true);};
+videoBtn.onclick=()=>{shortsMode=false;videoBtn.classList.add("active");shortBtn.classList.remove("active");if(shortsObserver)shortsObserver.disconnect();Object.values(shortsPlayers).forEach(p=>{try{p.pauseVideo();}catch(e){}});shortsPlayers={};currentPlayingShort=null;grid.style.display="grid";loadVideos(true);};
 
 function onYouTubeIframeAPIReady(){}
-async function loadShorts(){
-grid.innerHTML="";grid.style.display="flex";grid.style.flexDirection="column";grid.style.alignItems="center";loadingIndicator.style.display="block";nextToken="";
-let url="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=shorts&key="+API_KEYS[keyIndex];
+
+async function loadShorts(clear=true){ // FIX 2: अब clear और nextToken support
+if(loading)return;loading=true;loadingIndicator.style.display="block";
+if(clear){grid.innerHTML="";grid.style.display="flex";grid.style.flexDirection="column";grid.style.alignItems="center";nextToken="";Object.values(shortsPlayers).forEach(p=>{try{p.destroy();}catch(e){}});shortsPlayers={};currentPlayingShort=null;}
+
+let url="https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q="+encodeURIComponent(query+" shorts")+"&key="+API_KEYS[keyIndex]+(nextToken?"&pageToken="+nextToken:"");
 try{let res=await fetchWithKeyRotation(url);loadingIndicator.style.display="none";
 res.items.forEach(item=>{
 let id=item.id.videoId;let box=document.createElement("div");box.className="short-wrapper";
 box.style.width="350px";box.style.height="620px";box.style.background="#000";box.style.borderRadius="18px";box.style.overflow="hidden";box.style.marginBottom="20px";
-let iframeId="short_iframe_"+id;
-box.innerHTML=`<iframe id="${iframeId}" data-videoid="${id}" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&autoplay=0&controls=0" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+let iframeId="short_iframe_"+id+"_"+Date.now()+Math.random();
+box.innerHTML=`<iframe id="${iframeId}" data-videoid="${id}" src="https://www.youtube.com/embed/${id}?enablejsapi=1&mute=1&playsinline=1&rel=0&autoplay=0&controls=0&origin=${window.location.origin}" style="width:100%;height:100%;border:0;" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 grid.appendChild(box);
 });
-setTimeout(initShortsPlayers,1000);}catch(e){console.log(e);loadingIndicator.style.display="none";}
+nextToken=res.nextPageToken||"";
+setTimeout(initShortsPlayers,500);}catch(e){console.log(e);loadingIndicator.style.display="none";}
+loading=false;
 }
+
 function initShortsPlayers(){grid.querySelectorAll("iframe[id^='short_iframe_']").forEach(iframe=>{let id=iframe.dataset.videoid;if(!shortsPlayers[id]){shortsPlayers[id]=new YT.Player(iframe.id,{events:{'onReady':()=>{}}});}});setupShortsObserver();}
 function setupShortsObserver(){if(shortsObserver)shortsObserver.disconnect();shortsObserver=new IntersectionObserver((entries)=>{entries.forEach(entry=>{let iframe=entry.target.querySelector("iframe");if(!iframe)return;let id=iframe.dataset.videoid;let player=shortsPlayers[id];if(!player)return;if(entry.isIntersecting&&entry.intersectionRatio>=0.7){if(currentPlayingShort&&currentPlayingShort!==id){try{shortsPlayers[currentPlayingShort].pauseVideo();}catch(e){}}try{player.playVideo();}catch(e){}currentPlayingShort=id;}else{try{player.pauseVideo();}catch(e){}if(currentPlayingShort===id)currentPlayingShort=null;}});},{threshold:[0.7],rootMargin:"0px"});grid.querySelectorAll(".short-wrapper").forEach(box=>{shortsObserver.observe(box);});}
 
 let infiniteLoading=false;
-window.addEventListener("scroll",()=>{if(shortsMode)return;if(window.innerHeight+window.scrollY>=document.body.offsetHeight-500){if(nextToken&&!infiniteLoading&&!loading){infiniteLoading=true;loadVideos(false).finally(()=>{infiniteLoading=false;});}}});
+window.addEventListener("scroll",()=>{
+if(window.innerHeight+window.scrollY>=document.body.offsetHeight-500){
+if(!infiniteLoading&&!loading&&nextToken){
+infiniteLoading=true;
+if(shortsMode){loadShorts(false).finally(()=>{infiniteLoading=false;});} // FIX 3: Shorts में भी infinite
+else{loadVideos(false).finally(()=>{infiniteLoading=false;});}
+}
+}});
 
 loadVideos(true); // pehli baar load
 console.log("BHATI LITETUBE PRO READY 🚀 Data Saver Ready");
